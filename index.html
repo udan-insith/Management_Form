@@ -1133,9 +1133,14 @@
 				let seq = 1;
 				const uid = () => "id" + seq++ + "-" + Date.now().toString(36);
 				const STORAGE_KEY = "ironledger-data";
-				let storageAvailable = !!(
-					window.storage && typeof window.storage.get === "function"
-				);
+				let storageAvailable = true;
+				try {
+					const t = "__ironledger_probe__";
+					localStorage.setItem(t, "1");
+					localStorage.removeItem(t);
+				} catch (e) {
+					storageAvailable = false;
+				}
 				let saveFlashTimer;
 
 				function flashSaved() {
@@ -1155,12 +1160,12 @@
 					el.textContent = text || "Save failed";
 				}
 
-				async function loadState() {
+				function loadState() {
 					if (!storageAvailable) return;
 					try {
-						const result = await window.storage.get(STORAGE_KEY, false);
-						if (result && result.value) {
-							const data = JSON.parse(result.value);
+						const raw = localStorage.getItem(STORAGE_KEY);
+						if (raw) {
+							const data = JSON.parse(raw);
 							state.students = Array.isArray(data.students)
 								? data.students
 								: [];
@@ -1182,13 +1187,15 @@
 					}
 				}
 
-				async function saveState() {
+				function saveState() {
 					if (!storageAvailable) {
-						flashSaveError("Auto-save unavailable");
+						flashSaveError(
+							"Auto-save unavailable — browser storage is blocked",
+						);
 						return;
 					}
 					try {
-						await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+						localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 						flashSaved();
 					} catch (err) {
 						console.warn("IRONLEDGER: save failed", err);
@@ -1905,8 +1912,8 @@
 				});
 
 				/* ---------------- Init ---------------- */
-				async function init() {
-					await loadState();
+				function init() {
+					loadState();
 					refreshStudentDropdown();
 					renderDashboard();
 					renderRegistrationTable();
@@ -1914,8 +1921,11 @@
 					renderAttendanceLedger();
 					renderStudentPayTable();
 					renderInstitutePayTable();
+					renderHistoryTable();
 					if (!storageAvailable) {
-						flashSaveError("Auto-save unavailable — use Backup / Restore");
+						flashSaveError(
+							"Auto-save unavailable — browser storage is blocked. Use Backup / Restore.",
+						);
 					}
 					const overlay = document.getElementById("loadingOverlay");
 					if (overlay) {
