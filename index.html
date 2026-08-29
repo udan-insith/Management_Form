@@ -22,6 +22,7 @@
 				--teal: #3fa796;
 				--azure: #5b8dbe;
 				--rust: #d9634a;
+				--violet: #8a7fc9;
 				--text: #edeff2;
 				--muted: #8b96a5;
 				--muted-2: #5f6b7a;
@@ -151,6 +152,9 @@
 			}
 			.navlinks button[data-tab="institutepay"].active {
 				border-color: var(--rust);
+			}
+			.navlinks button[data-tab="history"].active {
+				border-color: var(--violet);
 			}
 
 			.iobtns {
@@ -693,6 +697,7 @@
 				<button data-tab="registration">Registration</button>
 				<button data-tab="studentpay">Student payments</button>
 				<button data-tab="institutepay">Institute payments</button>
+				<button data-tab="history">History</button>
 			</div>
 			<div class="iobtns">
 				<span class="save-status" id="saveStatus"></span>
@@ -1081,9 +1086,33 @@
 				</div>
 			</section>
 
+			<!-- HISTORY -->
+			<section class="page" id="page-history">
+				<div class="tab-flag">
+					<i style="background: var(--violet)"></i><span>Log</span>
+				</div>
+				<h1 class="page-title">Activity log</h1>
+				<p class="page-lede">
+					A timestamped record of every entry made — who was registered, which
+					days were marked, and every payment or expense logged.
+				</p>
+
+				<div class="ledger-wrap">
+					<table class="ledger" id="historyTable">
+						<thead>
+							<tr>
+								<th style="white-space: nowrap">When</th>
+								<th>Entry</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</section>
+
 			<footer class="hint">
-				Records live in this browser tab only — use Backup to save a copy,
-				Restore to load one back in.
+				Records auto-save as you go, and every entry is timestamped in the
+				History tab. Backup / Restore are there for offline copies.
 			</footer>
 		</main>
 
@@ -1099,6 +1128,7 @@
 					attendance: {}, // { 'YYYY-MM-DD': { studentId: 'P' | 'A' } }
 					studentPayments: [], // {id, studentId, date, amount, desc, method}
 					institutePayments: [], // {id, category, date, amount, desc}
+					log: [], // {id, ts, text}
 				};
 				let seq = 1;
 				const uid = () => "id" + seq++ + "-" + Date.now().toString(36);
@@ -1144,6 +1174,7 @@
 							state.institutePayments = Array.isArray(data.institutePayments)
 								? data.institutePayments
 								: [];
+							state.log = Array.isArray(data.log) ? data.log : [];
 						}
 					} catch (err) {
 						// Nothing saved yet, or the read failed — start with an empty ledger.
@@ -1192,6 +1223,55 @@
 						year: "2-digit",
 					});
 				};
+				const fmtWhen = (iso) => {
+					const dt = new Date(iso);
+					if (isNaN(dt)) return iso;
+					return (
+						dt.toLocaleDateString("en-GB", {
+							day: "2-digit",
+							month: "short",
+							year: "2-digit",
+						}) +
+						" · " +
+						dt.toLocaleTimeString("en-GB", {
+							hour: "2-digit",
+							minute: "2-digit",
+						})
+					);
+				};
+
+				function addLogEntry(text) {
+					state.log.push({ id: uid(), ts: new Date().toISOString(), text });
+					if (state.log.length > 300)
+						state.log.splice(0, state.log.length - 300);
+					if (
+						document.getElementById("page-history") &&
+						document.getElementById("page-history").classList.contains("active")
+					) {
+						renderHistoryTable();
+					}
+				}
+
+				function renderHistoryTable() {
+					const tbody = document.querySelector("#historyTable tbody");
+					if (!tbody) return;
+					if (!state.log.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="2">Nothing logged yet — every entry you make will be timestamped here.</td></tr>';
+						return;
+					}
+					const rows = state.log.slice().reverse();
+					tbody.innerHTML = rows
+						.map(
+							(l) =>
+								'<tr><td style="white-space:nowrap; color:var(--muted);">' +
+								esc(fmtWhen(l.ts)) +
+								"</td><td>" +
+								esc(l.text) +
+								"</td></tr>",
+						)
+						.join("");
+				}
 
 				/* ---------------- Navigation ---------------- */
 				const pages = [
@@ -1200,6 +1280,7 @@
 					"registration",
 					"studentpay",
 					"institutepay",
+					"history",
 				];
 				function showPage(tab) {
 					pages.forEach((p) => {
@@ -1221,6 +1302,7 @@
 						renderStudentPayTable();
 					}
 					if (tab === "institutepay") renderInstitutePayTable();
+					if (tab === "history") renderHistoryTable();
 					window.scrollTo({ top: 0, behavior: "smooth" });
 				}
 				document.querySelectorAll("[data-tab]").forEach((el) => {
@@ -1308,6 +1390,7 @@
 							edu: collectQuals("eduQualList"),
 							other: collectQuals("otherQualList"),
 						});
+						addLogEntry("Registered student — " + name + " (NIC " + nic + ")");
 						document.getElementById("regName").value = "";
 						document.getElementById("regNic").value = "";
 						document.getElementById("regAddress").value = "";
@@ -1370,6 +1453,7 @@
 							)
 								return;
 							const id = b.dataset.id;
+							const student = state.students.find((s) => s.id === id);
 							state.students = state.students.filter((s) => s.id !== id);
 							Object.values(state.attendance).forEach((rec) => {
 								delete rec[id];
@@ -1377,6 +1461,7 @@
 							state.studentPayments = state.studentPayments.filter(
 								(p) => p.studentId !== id,
 							);
+							addLogEntry("Removed student — " + (student ? student.name : id));
 							renderRegistrationTable();
 							renderAttendanceMarkList();
 							renderAttendanceLedger();
@@ -1444,6 +1529,21 @@
 								record[cb.dataset.id] = cb.checked ? "P" : "A";
 							});
 						state.attendance[date] = record;
+						const presentCount = Object.values(record).filter(
+							(v) => v === "P",
+						).length;
+						const absentCount = Object.values(record).filter(
+							(v) => v === "A",
+						).length;
+						addLogEntry(
+							"Attendance saved for " +
+								fmtDate(date) +
+								" — " +
+								presentCount +
+								" present, " +
+								absentCount +
+								" absent",
+						);
 						msg.textContent = "Saved attendance for " + fmtDate(date) + ".";
 						setTimeout(() => {
 							if (msg.textContent.startsWith("Saved")) msg.textContent = "";
@@ -1552,6 +1652,14 @@
 							method,
 							desc,
 						});
+						const s = state.students.find((x) => x.id === studentId);
+						addLogEntry(
+							"Payment logged — " +
+								money(amount) +
+								" from " +
+								(s ? s.name : "student") +
+								(desc ? " (" + desc + ")" : ""),
+						);
 						document.getElementById("paymentAmount").value = "";
 						document.getElementById("paymentDesc").value = "";
 						renderStudentPayTable();
@@ -1604,9 +1712,13 @@
 					document.getElementById("studentPayTotal").textContent = money(total);
 					tbody.querySelectorAll(".row-del").forEach((b) => {
 						b.addEventListener("click", () => {
+							const p = state.studentPayments.find(
+								(x) => x.id === b.dataset.id,
+							);
 							state.studentPayments = state.studentPayments.filter(
 								(p) => p.id !== b.dataset.id,
 							);
+							if (p) addLogEntry("Removed payment — " + money(p.amount));
 							renderStudentPayTable();
 							renderDashboard();
 							saveState();
@@ -1639,6 +1751,13 @@
 							amount,
 							desc,
 						});
+						addLogEntry(
+							"Expense logged — " +
+								category +
+								" " +
+								money(amount) +
+								(desc ? " (" + desc + ")" : ""),
+						);
 						document.getElementById("expAmount").value = "";
 						document.getElementById("expDesc").value = "";
 						renderInstitutePayTable();
@@ -1684,9 +1803,16 @@
 						money(total);
 					tbody.querySelectorAll(".row-del").forEach((b) => {
 						b.addEventListener("click", () => {
+							const p = state.institutePayments.find(
+								(x) => x.id === b.dataset.id,
+							);
 							state.institutePayments = state.institutePayments.filter(
 								(p) => p.id !== b.dataset.id,
 							);
+							if (p)
+								addLogEntry(
+									"Removed expense — " + p.category + " " + money(p.amount),
+								);
 							renderInstitutePayTable();
 							renderDashboard();
 							saveState();
@@ -1735,6 +1861,8 @@
 							state.institutePayments = Array.isArray(data.institutePayments)
 								? data.institutePayments
 								: [];
+							state.log = Array.isArray(data.log) ? data.log : state.log;
+							addLogEntry("Restored records from backup file");
 							renderRegistrationTable();
 							renderAttendanceMarkList();
 							renderAttendanceLedger();
@@ -1742,6 +1870,7 @@
 							renderStudentPayTable();
 							renderInstitutePayTable();
 							renderDashboard();
+							renderHistoryTable();
 							saveState();
 							alert("Records restored from backup.");
 						} catch (e) {
@@ -1755,7 +1884,7 @@
 				document.getElementById("resetBtn").addEventListener("click", () => {
 					if (
 						!confirm(
-							"This will permanently erase every student, attendance mark and payment on record. Continue?",
+							"This will permanently erase every student, attendance mark and payment on record. The activity log will be kept. Continue?",
 						)
 					)
 						return;
@@ -1763,6 +1892,7 @@
 					state.attendance = {};
 					state.studentPayments = [];
 					state.institutePayments = [];
+					addLogEntry("All student, attendance and payment records were reset");
 					refreshStudentDropdown();
 					renderDashboard();
 					renderRegistrationTable();
@@ -1770,6 +1900,7 @@
 					renderAttendanceLedger();
 					renderStudentPayTable();
 					renderInstitutePayTable();
+					renderHistoryTable();
 					saveState();
 				});
 
