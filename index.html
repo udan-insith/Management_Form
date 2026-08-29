@@ -1,1639 +1,1077 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Member &amp; Institute Records</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
-			rel="stylesheet"
-		/>
-		<style>
-			:root {
-				--ink: #0a0e12;
-				--panel: #10161c;
-				--panel-2: #171f27;
-				--line: #232c36;
-				--line-soft: #1b232c;
-				--gold: #c9a24b;
-				--gold-soft: #e4c97a;
-				--teal: #3fa796;
-				--azure: #5b8dbe;
-				--rust: #d9634a;
-				--text: #edeff2;
-				--muted: #8b96a5;
-				--muted-2: #5f6b7a;
-				--font-display: "Bebas Neue", sans-serif;
-				--font-body: "IBM Plex Sans", -apple-system, sans-serif;
-				--font-mono: "IBM Plex Mono", monospace;
-			}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONLEDGER — Member &amp; Institute Records</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0e12;
+    --panel:#10161c;
+    --panel-2:#171f27;
+    --line:#232c36;
+    --line-soft:#1b232c;
+    --gold:#c9a24b;
+    --gold-soft:#e4c97a;
+    --teal:#3fa796;
+    --azure:#5b8dbe;
+    --rust:#d9634a;
+    --text:#edeff2;
+    --muted:#8b96a5;
+    --muted-2:#5f6b7a;
+    --font-display:'Bebas Neue', sans-serif;
+    --font-body:'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
 
-			* {
-				box-sizing: border-box;
-			}
-			html {
-				scroll-behavior: smooth;
-			}
-			body {
-				margin: 0;
-				background:
-					radial-gradient(
-						1200px 500px at 15% -10%,
-						rgba(201, 162, 75, 0.07),
-						transparent 60%
-					),
-					var(--ink);
-				color: var(--text);
-				font-family: var(--font-body);
-				line-height: 1.5;
-				-webkit-font-smoothing: antialiased;
-			}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(201,162,75,0.07), transparent 60%),
+      var(--ink);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
 
-			a {
-				color: inherit;
-			}
-			button {
-				font-family: inherit;
-			}
+  a{color:inherit;}
+  button{font-family:inherit;}
 
-			::selection {
-				background: rgba(201, 162, 75, 0.35);
-			}
+  ::selection{background:rgba(201,162,75,0.35);}
 
-			:focus-visible {
-				outline: 2px solid var(--gold-soft);
-				outline-offset: 2px;
-			}
+  :focus-visible{
+    outline:2px solid var(--gold-soft);
+    outline-offset:2px;
+  }
 
-			@media (prefers-reduced-motion: reduce) {
-				* {
-					animation-duration: 0.01ms !important;
-					transition-duration: 0.01ms !important;
-				}
-			}
-			/* TOP BAR */
-			.topbar {
-				position: sticky;
-				top: 0;
-				z-index: 50;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 24px;
-				padding: 14px clamp(16px, 4vw, 40px);
-				background: rgba(10, 14, 18, 0.92);
-				backdrop-filter: blur(10px);
-				border-bottom: 1px solid var(--line);
-				background-image: repeating-linear-gradient(
-					to right,
-					var(--line-soft) 0 6px,
-					transparent 6px 14px
-				);
-				background-position: bottom;
-				background-size: 100% 1px;
-				background-repeat: repeat-x;
-			}
-			.brand {
-				display: flex;
-				align-items: baseline;
-				gap: 10px;
-				white-space: nowrap;
-			}
-			.brand .mark {
-				font-family: var(--font-display);
-				font-size: 26px;
-				letter-spacing: 1.5px;
-				color: var(--gold-soft);
-			}
-			.brand .sub {
-				font-size: 12px;
-				color: var(--muted-2);
-			}
-			.navlinks {
-				display: flex;
-				align-items: center;
-				gap: 4px;
-				flex-wrap: wrap;
-			}
-			.navlinks button {
-				background: transparent;
-				border: none;
-				cursor: pointer;
-				color: var(--muted);
-				font-size: 14px;
-				font-weight: 500;
-				padding: 10px 14px;
-				border-bottom: 2px solid transparent;
-				transition:
-					color 0.15s ease,
-					border-color 0.15s ease;
-			}
-			.navlinks button:hover {
-				color: var(--text);
-			}
-			.navlinks button.active {
-				color: var(--text);
-			}
-			.navlinks button[data-tab="dashboard"].active {
-				border-color: var(--gold-soft);
-			}
-			.navlinks button[data-tab="attendance"].active {
-				border-color: var(--teal);
-			}
-			.navlinks button[data-tab="registration"].active {
-				border-color: var(--azure);
-			}
-			.navlinks button[data-tab="studentpay"].active {
-				border-color: var(--gold-soft);
-			}
-			.navlinks button[data-tab="institutepay"].active {
-				border-color: var(--rust);
-			}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
 
-			.iobtns {
-				display: flex;
-				gap: 8px;
-			}
-			.iobtn {
-				display: flex;
-				align-items: center;
-				gap: 6px;
-				background: var(--panel-2);
-				border: 1px solid var(--line);
-				color: var(--muted);
-				font-size: 12.5px;
-				padding: 8px 12px;
-				border-radius: 3px;
-				cursor: pointer;
-				transition:
-					border-color 0.15s ease,
-					color 0.15s ease;
-			}
-			.iobtn:hover {
-				border-color: var(--gold);
-				color: var(--text);
-			}
-			/* LAYOUT */
-			main {
-				max-width: 1180px;
-				margin: 0 auto;
-				padding: clamp(20px, 4vw, 44px) clamp(16px, 4vw, 40px) 100px;
-			}
-			.page {
-				display: none;
-			}
-			.page.active {
-				display: block;
-				animation: rise 0.35s ease both;
-			}
-			@keyframes rise {
-				from {
-					opacity: 0;
-					transform: translateY(6px);
-				}
-				to {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:24px;
+    padding:14px clamp(16px,4vw,40px);
+    background:rgba(10,14,18,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    background-image: repeating-linear-gradient(to right, var(--line-soft) 0 6px, transparent 6px 14px);
+    background-position:bottom;
+    background-size:100% 1px;
+    background-repeat:repeat-x;
+  }
+  .brand{
+    display:flex; align-items:baseline; gap:10px;
+    white-space:nowrap;
+  }
+  .brand .mark{
+    font-family:var(--font-display);
+    font-size:26px;
+    letter-spacing:1.5px;
+    color:var(--gold-soft);
+  }
+  .brand .sub{
+    font-size:12px;
+    color:var(--muted-2);
+  }
+  .navlinks{
+    display:flex; align-items:center; gap:4px;
+    flex-wrap:wrap;
+  }
+  .navlinks button{
+    background:transparent; border:none; cursor:pointer;
+    color:var(--muted);
+    font-size:14px; font-weight:500;
+    padding:10px 14px;
+    border-bottom:2px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .navlinks button:hover{color:var(--text);}
+  .navlinks button.active{color:var(--text);}
+  .navlinks button[data-tab="dashboard"].active{border-color:var(--gold-soft);}
+  .navlinks button[data-tab="attendance"].active{border-color:var(--teal);}
+  .navlinks button[data-tab="registration"].active{border-color:var(--azure);}
+  .navlinks button[data-tab="studentpay"].active{border-color:var(--gold-soft);}
+  .navlinks button[data-tab="institutepay"].active{border-color:var(--rust);}
 
-			.tab-flag {
-				display: inline-flex;
-				align-items: center;
-				gap: 10px;
-				margin-bottom: 6px;
-			}
-			.tab-flag i {
-				width: 10px;
-				height: 22px;
-				border-radius: 1px;
-				display: inline-block;
-			}
-			.tab-flag span {
-				font-size: 12.5px;
-				color: var(--muted);
-				font-weight: 500;
-			}
-			.page-title {
-				font-family: var(--font-display);
-				font-size: clamp(34px, 5vw, 52px);
-				letter-spacing: 0.5px;
-				margin: 0 0 4px;
-				color: var(--text);
-			}
-			.page-lede {
-				color: var(--muted);
-				font-size: 15px;
-				max-width: 62ch;
-				margin: 0 0 32px;
-			}
-			/* DASHBOARD */
-			.stat-row {
-				display: grid;
-				grid-template-columns: repeat(4, 1fr);
-				gap: 1px;
-				background: var(--line);
-				border: 1px solid var(--line);
-				margin-bottom: 40px;
-			}
-			.stat {
-				background: var(--panel);
-				padding: 22px 20px;
-			}
-			.stat .num {
-				font-family: var(--font-display);
-				font-size: 38px;
-				color: var(--gold-soft);
-				display: block;
-				line-height: 1;
-			}
-			.stat .lbl {
-				color: var(--muted);
-				font-size: 13px;
-				margin-top: 8px;
-				display: block;
-			}
+  .iobtns{display:flex; align-items:center; gap:8px;}
+  .iobtn{
+    display:flex; align-items:center; gap:6px;
+    background:var(--panel-2); border:1px solid var(--line);
+    color:var(--muted); font-size:12.5px;
+    padding:8px 12px; border-radius:3px; cursor:pointer;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .iobtn:hover{border-color:var(--gold); color:var(--text);}
+  .iobtn.danger:hover{border-color:var(--rust); color:var(--rust);}
+  .save-status{
+    font-size:11.5px; color:var(--teal); min-width:0; white-space:nowrap;
+    transition:opacity .3s ease; opacity:1;
+  }
+  .save-status:empty{opacity:0;}
+  .save-status.warn{color:var(--rust);}
 
-			.nav-grid {
-				display: grid;
-				grid-template-columns: repeat(4, 1fr);
-				gap: 14px;
-			}
-			.nav-card {
-				position: relative;
-				background: var(--panel);
-				border: 1px solid var(--line);
-				border-top: 3px solid var(--card-accent, var(--gold));
-				padding: 22px 18px 20px;
-				text-align: left;
-				cursor: pointer;
-				color: var(--text);
-				transition:
-					transform 0.15s ease,
-					background 0.15s ease;
-			}
-			.nav-card:hover {
-				background: var(--panel-2);
-				transform: translateY(-2px);
-			}
-			.nav-card h3 {
-				font-family: var(--font-display);
-				font-size: 22px;
-				letter-spacing: 0.3px;
-				margin: 10px 0 6px;
-				font-weight: 400;
-			}
-			.nav-card p {
-				margin: 0;
-				color: var(--muted);
-				font-size: 13px;
-			}
-			.nav-card .go {
-				position: absolute;
-				top: 18px;
-				right: 16px;
-				color: var(--muted-2);
-				font-size: 18px;
-			}
-			/* FORMS */
-			.sheet {
-				background: var(--panel);
-				border: 1px solid var(--line);
-				padding: clamp(18px, 3vw, 30px);
-				margin-bottom: 34px;
-			}
-			.sheet h2 {
-				font-family: var(--font-display);
-				font-weight: 400;
-				font-size: 20px;
-				letter-spacing: 0.3px;
-				margin: 0 0 18px;
-				color: var(--text);
-			}
-			.field-grid {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr);
-				gap: 20px 24px;
-			}
-			.field {
-				display: flex;
-				flex-direction: column;
-				gap: 6px;
-			}
-			.field.full {
-				grid-column: 1 / -1;
-			}
-			.field label {
-				font-size: 12.5px;
-				color: var(--muted);
-			}
-			.field input[type="text"],
-			.field input[type="email"],
-			.field input[type="date"],
-			.field input[type="number"],
-			.field select,
-			.field textarea {
-				background: transparent;
-				border: none;
-				border-bottom: 1px solid var(--line);
-				color: var(--text);
-				font-size: 14.5px;
-				font-family: var(--font-body);
-				padding: 8px 2px;
-				outline: none;
-				transition: border-color 0.15s ease;
-			}
-			.field select {
-				background: transparent;
-			}
-			.field select option {
-				background: var(--panel-2);
-				color: var(--text);
-			}
-			.field textarea {
-				resize: vertical;
-				min-height: 44px;
-			}
-			.field input:focus,
-			.field select:focus,
-			.field textarea:focus {
-				border-bottom: 1px solid var(--gold-soft);
-			}
+  .loading-overlay{
+    position:fixed; inset:0; z-index:200;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--ink);
+    transition:opacity .35s ease;
+  }
+  .loading-overlay.hide{ opacity:0; pointer-events:none; }
+  .loading-overlay span{
+    font-family:var(--font-display); font-size:22px; letter-spacing:1px; color:var(--gold-soft);
+  }
 
-			.qual-row {
-				display: flex;
-				gap: 8px;
-				align-items: center;
-				margin-bottom: 8px;
-			}
-			.qual-row input {
-				flex: 1;
-			}
-			.qual-remove {
-				width: 26px;
-				height: 26px;
-				flex: 0 0 auto;
-				background: transparent;
-				border: 1px solid var(--line);
-				color: var(--muted-2);
-				cursor: pointer;
-				border-radius: 3px;
-				font-size: 15px;
-				line-height: 1;
-			}
-			.qual-remove:hover {
-				border-color: var(--rust);
-				color: var(--rust);
-			}
-			.qual-add {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				background: transparent;
-				border: 1px dashed var(--line);
-				color: var(--muted);
-				font-size: 12.5px;
-				padding: 7px 12px;
-				border-radius: 3px;
-				cursor: pointer;
-				margin-top: 2px;
-			}
-			.qual-add:hover {
-				border-color: var(--gold);
-				color: var(--gold-soft);
-			}
-			.qual-add .plus {
-				font-size: 14px;
-			}
+  /* ---------- Layout ---------- */
+  main{
+    max-width:1180px; margin:0 auto;
+    padding:clamp(20px,4vw,44px) clamp(16px,4vw,40px) 100px;
+  }
+  .page{display:none;}
+  .page.active{display:block; animation:rise .35s ease both;}
+  @keyframes rise{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
 
-			.sheet-actions {
-				margin-top: 22px;
-				display: flex;
-				gap: 12px;
-				align-items: center;
-			}
-			.btn {
-				background: var(--gold);
-				color: #1a1305;
-				border: none;
-				font-size: 14px;
-				font-weight: 600;
-				letter-spacing: 0.2px;
-				padding: 11px 22px;
-				cursor: pointer;
-				border-radius: 3px;
-				transition:
-					background 0.15s ease,
-					transform 0.1s ease;
-			}
-			.btn:hover {
-				background: var(--gold-soft);
-			}
-			.btn:active {
-				transform: scale(0.98);
-			}
-			.btn.ghost {
-				background: transparent;
-				border: 1px solid var(--line);
-				color: var(--muted);
-			}
-			.btn.ghost:hover {
-				border-color: var(--muted);
-				color: var(--text);
-			}
-			.form-msg {
-				font-size: 12.5px;
-				color: var(--rust);
-				min-height: 14px;
-			}
-			/* LEDGER TABLES STYLES */
-			.ledger-wrap {
-				background: var(--panel);
-				border: 1px solid var(--line);
-				overflow-x: auto;
-			}
-			table.ledger {
-				width: 100%;
-				border-collapse: collapse;
-				font-size: 13.5px;
-				min-width: 560px;
-			}
-			table.ledger thead th {
-				text-align: left;
-				font-weight: 600;
-				font-size: 12px;
-				color: var(--muted);
-				padding: 14px 16px;
-				border-bottom: 2px solid var(--line);
-				white-space: nowrap;
-				position: sticky;
-				top: 0;
-				background: var(--panel);
-			}
-			table.ledger tbody td {
-				padding: 12px 16px;
-				border-bottom: 1px solid var(--line-soft);
-				color: var(--text);
-				vertical-align: top;
-			}
-			table.ledger tbody tr:nth-child(odd) {
-				background: rgba(201, 162, 75, 0.02);
-			}
-			table.ledger tbody tr:hover {
-				background: rgba(201, 162, 75, 0.05);
-			}
-			table.ledger td.num,
-			table.ledger th.num {
-				font-family: var(--font-mono);
-				text-align: right;
-				white-space: nowrap;
-			}
-			table.ledger td.name-col {
-				position: sticky;
-				left: 0;
-				background: var(--panel);
-				font-weight: 600;
-			}
-			table.ledger tbody tr:nth-child(odd) td.name-col {
-				background: #12181e;
-			}
-			table.ledger tfoot td {
-				padding: 14px 16px;
-				border-top: 2px solid var(--line);
-				font-weight: 600;
-				font-family: var(--font-mono);
-			}
-			.qual-tag {
-				display: inline-block;
-				font-size: 11.5px;
-				color: var(--muted);
-				background: var(--panel-2);
-				border: 1px solid var(--line);
-				padding: 2px 7px;
-				border-radius: 2px;
-				margin: 2px 4px 2px 0;
-			}
-			.row-del {
-				background: transparent;
-				border: none;
-				color: var(--muted-2);
-				cursor: pointer;
-				font-size: 15px;
-				padding: 2px 6px;
-			}
-			.row-del:hover {
-				color: var(--rust);
-			}
-			.mark {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 24px;
-				height: 24px;
-				border-radius: 3px;
-				font-size: 11px;
-				font-weight: 700;
-				font-family: var(--font-mono);
-			}
-			.mark.present {
-				background: rgba(63, 167, 150, 0.16);
-				color: var(--teal);
-			}
-			.mark.absent {
-				background: rgba(217, 99, 74, 0.14);
-				color: var(--rust);
-			}
-			.mark.none {
-				color: var(--muted-2);
-			}
+  .tab-flag{
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:6px;
+  }
+  .tab-flag i{
+    width:10px; height:22px; border-radius:1px; display:inline-block;
+  }
+  .tab-flag span{
+    font-size:12.5px; color:var(--muted); font-weight:500;
+  }
+  .page-title{
+    font-family:var(--font-display);
+    font-size:clamp(34px,5vw,52px);
+    letter-spacing:0.5px;
+    margin:0 0 4px;
+    color:var(--text);
+  }
+  .page-lede{
+    color:var(--muted); font-size:15px; max-width:62ch; margin:0 0 32px;
+  }
 
-			.empty-row {
-				text-align: center;
-				color: var(--muted-2);
-				font-style: italic;
-				padding: 34px 16px !important;
-			}
+  /* ---------- Dashboard ---------- */
+  .stat-row{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-bottom:40px;
+  }
+  .stat{
+    background:var(--panel); padding:22px 20px;
+  }
+  .stat .num{
+    font-family:var(--font-display); font-size:38px; color:var(--gold-soft);
+    display:block; line-height:1;
+  }
+  .stat .lbl{
+    color:var(--muted); font-size:13px; margin-top:8px; display:block;
+  }
 
-			/* ATTENDANCE CONTROL */
-			.att-controls {
-				display: flex;
-				align-items: flex-end;
-				gap: 20px;
-				flex-wrap: wrap;
-				margin-bottom: 18px;
-			}
-			.att-list {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-				gap: 10px;
-				margin: 18px 0 20px;
-			}
-			.att-item {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				background: var(--panel-2);
-				border: 1px solid var(--line);
-				padding: 10px 12px;
-				border-radius: 3px;
-			}
-			.att-item input {
-				width: 16px;
-				height: 16px;
-				accent-color: var(--teal);
-			}
-			.att-item .who {
-				font-size: 13.5px;
-			}
-			.att-item .who small {
-				display: block;
-				color: var(--muted-2);
-				font-size: 11px;
-			}
+  .nav-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  }
+  .nav-card{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-top:3px solid var(--card-accent, var(--gold));
+    padding:22px 18px 20px;
+    text-align:left; cursor:pointer; color:var(--text);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .nav-card:hover{ background:var(--panel-2); transform:translateY(-2px); }
+  .nav-card h3{
+    font-family:var(--font-display); font-size:22px; letter-spacing:.3px;
+    margin:10px 0 6px; font-weight:400;
+  }
+  .nav-card p{ margin:0; color:var(--muted); font-size:13px; }
+  .nav-card .go{
+    position:absolute; top:18px; right:16px; color:var(--muted-2); font-size:18px;
+  }
 
-			.section-title {
-				font-size: 13px;
-				color: var(--muted);
-				margin: 0 0 12px;
-				font-weight: 600;
-			}
+  /* ---------- Forms (ledger-fill style) ---------- */
+  .sheet{
+    background:var(--panel); border:1px solid var(--line);
+    padding:clamp(18px,3vw,30px); margin-bottom:34px;
+  }
+  .sheet h2{
+    font-family:var(--font-display); font-weight:400; font-size:20px;
+    letter-spacing:.3px; margin:0 0 18px; color:var(--text);
+  }
+  .field-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:20px 24px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{ font-size:12.5px; color:var(--muted); }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="date"],
+  .field input[type="number"],
+  .field select,
+  .field textarea{
+    background:transparent; border:none; border-bottom:1px solid var(--line);
+    color:var(--text); font-size:14.5px; font-family:var(--font-body);
+    padding:8px 2px; outline:none;
+    transition:border-color .15s ease;
+  }
+  .field select{
+    background:transparent;
+  }
+  .field select option{ background:var(--panel-2); color:var(--text); }
+  .field textarea{ resize:vertical; min-height:44px; }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    border-bottom:1px solid var(--gold-soft);
+  }
 
-			footer.hint {
-				text-align: center;
-				color: var(--muted-2);
-				font-size: 12px;
-				margin-top: 60px;
-			}
+  .qual-row{ display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+  .qual-row input{ flex:1; }
+  .qual-remove{
+    width:26px; height:26px; flex:0 0 auto;
+    background:transparent; border:1px solid var(--line);
+    color:var(--muted-2); cursor:pointer; border-radius:3px; font-size:15px; line-height:1;
+  }
+  .qual-remove:hover{ border-color:var(--rust); color:var(--rust); }
+  .qual-add{
+    display:inline-flex; align-items:center; gap:6px;
+    background:transparent; border:1px dashed var(--line);
+    color:var(--muted); font-size:12.5px;
+    padding:7px 12px; border-radius:3px; cursor:pointer; margin-top:2px;
+  }
+  .qual-add:hover{ border-color:var(--gold); color:var(--gold-soft); }
+  .qual-add .plus{ font-size:14px; }
 
-			@media (max-width: 880px) {
-				.field-grid {
-					grid-template-columns: 1fr;
-				}
-				.stat-row,
-				.nav-grid {
-					grid-template-columns: repeat(2, 1fr);
-				}
-				.topbar {
-					flex-wrap: wrap;
-				}
-				.navlinks {
-					order: 3;
-					width: 100%;
-					justify-content: space-between;
-				}
-			}
-			@media (max-width: 520px) {
-				.stat-row,
-				.nav-grid {
-					grid-template-columns: 1fr;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<nav class="topbar">
-			<div class="brand">
-				<span class="mark"></span>
-				<span class="sub">Member &amp; institute records</span>
-			</div>
-			<div class="navlinks" id="navlinks">
-				<button data-tab="dashboard" class="active">Dashboard</button>
-				<button data-tab="attendance">Attendance</button>
-				<button data-tab="registration">Registration</button>
-				<button data-tab="studentpay">Student payments</button>
-				<button data-tab="institutepay">Institute payments</button>
-			</div>
-			<div class="iobtns">
-				<button class="iobtn" id="exportBtn" title="Save all records to a file">
-					⭳ Backup
-				</button>
-				<button
-					class="iobtn"
-					id="importBtn"
-					title="Load records from a backup file"
-				>
-					⭱ Restore
-				</button>
-			</div>
-		</nav>
+  .sheet-actions{ margin-top:22px; display:flex; gap:12px; align-items:center; }
+  .btn{
+    background:var(--gold); color:#1a1305; border:none;
+    font-size:14px; font-weight:600; letter-spacing:.2px;
+    padding:11px 22px; cursor:pointer; border-radius:3px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .btn:hover{ background:var(--gold-soft); }
+  .btn:active{ transform:scale(.98); }
+  .btn.ghost{
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+  }
+  .btn.ghost:hover{ border-color:var(--muted); color:var(--text); }
+  .form-msg{ font-size:12.5px; color:var(--rust); min-height:14px; }
 
-		<main>
-			<!-- DASHBOARD -->
-			<section class="page active" id="page-dashboard">
-				<h1 class="page-title">Today's ledger</h1>
-				<p class="page-lede">
-					A running record of who's training, who's registered, and what's moved
-					through the books.
-				</p>
+  /* ---------- Ledger tables ---------- */
+  .ledger-wrap{
+    background:var(--panel); border:1px solid var(--line);
+    overflow-x:auto;
+  }
+  table.ledger{
+    width:100%; border-collapse:collapse; font-size:13.5px;
+    min-width:560px;
+  }
+  table.ledger thead th{
+    text-align:left; font-weight:600; font-size:12px; color:var(--muted);
+    padding:14px 16px; border-bottom:2px solid var(--line);
+    white-space:nowrap;
+    position:sticky; top:0; background:var(--panel);
+  }
+  table.ledger tbody td{
+    padding:12px 16px; border-bottom:1px solid var(--line-soft);
+    color:var(--text); vertical-align:top;
+  }
+  table.ledger tbody tr:nth-child(odd){ background:rgba(201,162,75,0.02); }
+  table.ledger tbody tr:hover{ background:rgba(201,162,75,0.05); }
+  table.ledger td.num, table.ledger th.num{
+    font-family:var(--font-mono); text-align:right; white-space:nowrap;
+  }
+  table.ledger td.name-col{
+    position:sticky; left:0; background:var(--panel);
+    font-weight:600;
+  }
+  table.ledger tbody tr:nth-child(odd) td.name-col{ background:#12181e; }
+  table.ledger tfoot td{
+    padding:14px 16px; border-top:2px solid var(--line);
+    font-weight:600; font-family:var(--font-mono);
+  }
+  .qual-tag{
+    display:inline-block; font-size:11.5px; color:var(--muted);
+    background:var(--panel-2); border:1px solid var(--line);
+    padding:2px 7px; border-radius:2px; margin:2px 4px 2px 0;
+  }
+  .row-del{
+    background:transparent; border:none; color:var(--muted-2); cursor:pointer;
+    font-size:15px; padding:2px 6px;
+  }
+  .row-del:hover{ color:var(--rust); }
+  .mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:3px; font-size:11px; font-weight:700;
+    font-family:var(--font-mono);
+  }
+  .mark.present{ background:rgba(63,167,150,0.16); color:var(--teal); }
+  .mark.absent{ background:rgba(217,99,74,0.14); color:var(--rust); }
+  .mark.none{ color:var(--muted-2); }
 
-				<div class="stat-row">
-					<div class="stat">
-						<span class="num" id="statStudents">0</span
-						><span class="lbl">Registered students</span>
-					</div>
-					<div class="stat">
-						<span class="num" id="statPresent">0</span
-						><span class="lbl">Present today</span>
-					</div>
-					<div class="stat">
-						<span class="num" id="statCollected">0</span
-						><span class="lbl">Collected from students</span>
-					</div>
-					<div class="stat">
-						<span class="num" id="statSpent">0</span
-						><span class="lbl">Institute expenses</span>
-					</div>
-				</div>
+  .empty-row{
+    text-align:center; color:var(--muted-2); font-style:italic;
+    padding:34px 16px !important;
+  }
 
-				<p class="section-title">Go to a book</p>
-				<div class="nav-grid">
-					<button
-						class="nav-card"
-						style="--card-accent: var(--teal)"
-						data-tab="attendance"
-					>
-						<span class="go">→</span>
-						<h3>Attendance</h3>
-						<p>Mark who trained today and see the full register.</p>
-					</button>
-					<button
-						class="nav-card"
-						style="--card-accent: var(--azure)"
-						data-tab="registration"
-					>
-						<span class="go">→</span>
-						<h3>Registration</h3>
-						<p>Enrol a new student and keep their details on file.</p>
-					</button>
-					<button
-						class="nav-card"
-						style="--card-accent: var(--gold)"
-						data-tab="studentpay"
-					>
-						<span class="go">→</span>
-						<h3>Student payments</h3>
-						<p>Log fees, dues and payments as they're collected.</p>
-					</button>
-					<button
-						class="nav-card"
-						style="--card-accent: var(--rust)"
-						data-tab="institutepay"
-					>
-						<span class="go">→</span>
-						<h3>Institute payments</h3>
-						<p>Track lecturers, electricity, water, rent and other spend.</p>
-					</button>
-				</div>
-			</section>
+  /* ---------- Attendance controls ---------- */
+  .att-controls{
+    display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .att-list{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:10px; margin:18px 0 20px;
+  }
+  .att-item{
+    display:flex; align-items:center; gap:10px;
+    background:var(--panel-2); border:1px solid var(--line);
+    padding:10px 12px; border-radius:3px;
+  }
+  .att-item input{ width:16px; height:16px; accent-color:var(--teal); }
+  .att-item .who{ font-size:13.5px; }
+  .att-item .who small{ display:block; color:var(--muted-2); font-size:11px; }
 
-			<!-- ATTENDANCE -->
-			<section class="page" id="page-attendance">
-				<div class="tab-flag">
-					<i style="background: var(--teal)"></i><span>Book 01</span>
-				</div>
-				<h1 class="page-title">Attendance register</h1>
-				<p class="page-lede">
-					Pick a date, tick who's in, save the day. Every date you save becomes
-					a new column in the register below — just like marking a physical
-					attendance book.
-				</p>
+  .section-title{
+    font-size:13px; color:var(--muted); margin:0 0 12px; font-weight:600;
+  }
 
-				<div class="sheet">
-					<h2>Mark attendance</h2>
-					<div class="att-controls">
-						<div class="field">
-							<label for="attDate">Date</label>
-							<input type="date" id="attDate" />
-						</div>
-					</div>
-					<p class="section-title" id="attListTitle">Students</p>
-					<div class="att-list" id="attList"></div>
-					<div class="sheet-actions">
-						<button class="btn" id="saveAttendanceBtn">
-							Save attendance for this date
-						</button>
-						<span class="form-msg" id="attMsg"></span>
-					</div>
-				</div>
+  footer.hint{
+    text-align:center; color:var(--muted-2); font-size:12px; margin-top:60px;
+  }
 
-				<p class="section-title">Register — one column per day</p>
-				<div class="ledger-wrap">
-					<table class="ledger" id="attendanceTable">
-						<thead>
-							<tr>
-								<th>Student</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
-			</section>
+  @media (max-width: 880px){
+    .field-grid{ grid-template-columns:1fr; }
+    .stat-row, .nav-grid{ grid-template-columns:repeat(2,1fr); }
+    .topbar{ flex-wrap:wrap; }
+    .navlinks{ order:3; width:100%; justify-content:space-between; }
+  }
+  @media (max-width: 520px){
+    .stat-row, .nav-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
 
-			<!-- REGISTRATION -->
-			<section class="page" id="page-registration">
-				<div class="tab-flag">
-					<i style="background: var(--azure)"></i><span>Book 02</span>
-				</div>
-				<h1 class="page-title">Student registration</h1>
-				<p class="page-lede">
-					Enrol a new student. Once saved, they'll appear automatically in the
-					attendance register and the payment book.
-				</p>
+<div class="loading-overlay" id="loadingOverlay"><span>Opening the ledger…</span></div>
 
-				<div class="sheet">
-					<h2>New student</h2>
-					<div class="field-grid">
-						<div class="field">
-							<label for="regName">Student name</label>
-							<input
-								type="text"
-								id="regName"
-								placeholder="e.g. Nadeesha Perera"
-							/>
-						</div>
-						<div class="field">
-							<label for="regNic">NIC no.</label>
-							<input type="text" id="regNic" placeholder="e.g. 200145601234" />
-						</div>
-						<div class="field full">
-							<label for="regAddress">Address</label>
-							<textarea
-								id="regAddress"
-								placeholder="e.g. 24 Lake Road, Maharagama"
-							></textarea>
-						</div>
-						<div class="field">
-							<label for="regEmail">E-mail</label>
-							<input
-								type="email"
-								id="regEmail"
-								placeholder="e.g. name@email.com"
-							/>
-						</div>
-						<div></div>
+<nav class="topbar">
+  <div class="brand">
+    <span class="mark">IRONLEDGER</span>
+    <span class="sub">Member &amp; institute records</span>
+  </div>
+  <div class="navlinks" id="navlinks">
+    <button data-tab="dashboard" class="active">Dashboard</button>
+    <button data-tab="attendance">Attendance</button>
+    <button data-tab="registration">Registration</button>
+    <button data-tab="studentpay">Student payments</button>
+    <button data-tab="institutepay">Institute payments</button>
+  </div>
+  <div class="iobtns">
+    <span class="save-status" id="saveStatus"></span>
+    <button class="iobtn" id="exportBtn" title="Save all records to a file">⭳ Backup</button>
+    <button class="iobtn" id="importBtn" title="Load records from a backup file">⭱ Restore</button>
+    <button class="iobtn danger" id="resetBtn" title="Erase all saved records">⨯ Reset</button>
+  </div>
+</nav>
 
-						<div class="field full">
-							<label>Education qualification</label>
-							<div id="eduQualList"></div>
-							<button
-								type="button"
-								class="qual-add"
-								data-target="eduQualList"
-								data-placeholder="e.g. BSc in Sports Science"
-							>
-								<span class="plus">+</span> Add another qualification
-							</button>
-						</div>
+<main>
 
-						<div class="field full">
-							<label>Other qualification</label>
-							<div id="otherQualList"></div>
-							<button
-								type="button"
-								class="qual-add"
-								data-target="otherQualList"
-								data-placeholder="e.g. First Aid Certified"
-							>
-								<span class="plus">+</span> Add another qualification
-							</button>
-						</div>
-					</div>
-					<div class="sheet-actions">
-						<button class="btn" id="saveStudentBtn">Register student</button>
-						<span class="form-msg" id="regMsg"></span>
-					</div>
-				</div>
+  <!-- DASHBOARD -->
+  <section class="page active" id="page-dashboard">
+    <h1 class="page-title">Today's ledger</h1>
+    <p class="page-lede">A running record of who's training, who's registered, and what's moved through the books.</p>
 
-				<p class="section-title">All registered students</p>
-				<div class="ledger-wrap">
-					<table class="ledger" id="registrationTable">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>NIC no.</th>
-								<th>Address</th>
-								<th>E-mail</th>
-								<th>Education qualification</th>
-								<th>Other qualification</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
-			</section>
+    <div class="stat-row">
+      <div class="stat"><span class="num" id="statStudents">0</span><span class="lbl">Registered students</span></div>
+      <div class="stat"><span class="num" id="statPresent">0</span><span class="lbl">Present today</span></div>
+      <div class="stat"><span class="num" id="statCollected">0</span><span class="lbl">Collected from students</span></div>
+      <div class="stat"><span class="num" id="statSpent">0</span><span class="lbl">Institute expenses</span></div>
+    </div>
 
-			<!-- STUDENT PAYMENT -->
-			<section class="page" id="page-studentpay">
-				<div class="tab-flag">
-					<i style="background: var(--gold)"></i><span>Book 03</span>
-				</div>
-				<h1 class="page-title">Student payments</h1>
-				<p class="page-lede">
-					Log every fee as it comes in. Each entry writes a new line into the
-					payment book below.
-				</p>
+    <p class="section-title">Go to a book</p>
+    <div class="nav-grid">
+      <button class="nav-card" style="--card-accent:var(--teal)" data-tab="attendance">
+        <span class="go">→</span>
+        <h3>Attendance</h3>
+        <p>Mark who trained today and see the full register.</p>
+      </button>
+      <button class="nav-card" style="--card-accent:var(--azure)" data-tab="registration">
+        <span class="go">→</span>
+        <h3>Registration</h3>
+        <p>Enrol a new student and keep their details on file.</p>
+      </button>
+      <button class="nav-card" style="--card-accent:var(--gold)" data-tab="studentpay">
+        <span class="go">→</span>
+        <h3>Student payments</h3>
+        <p>Log fees, dues and payments as they're collected.</p>
+      </button>
+      <button class="nav-card" style="--card-accent:var(--rust)" data-tab="institutepay">
+        <span class="go">→</span>
+        <h3>Institute payments</h3>
+        <p>Track lecturers, electricity, water, rent and other spend.</p>
+      </button>
+    </div>
+  </section>
 
-				<div class="sheet">
-					<h2>New payment</h2>
-					<div class="field-grid">
-						<div class="field">
-							<label for="paymentStudent">Student</label>
-							<select id="paymentStudent"></select>
-						</div>
-						<div class="field">
-							<label for="paymentDate">Date</label>
-							<input type="date" id="paymentDate" />
-						</div>
-						<div class="field">
-							<label for="paymentAmount">Amount (Rs.)</label>
-							<input
-								type="number"
-								id="paymentAmount"
-								min="0"
-								step="0.01"
-								placeholder="0.00"
-							/>
-						</div>
-						<div class="field">
-							<label for="paymentMethod">Method</label>
-							<select id="paymentMethod">
-								<option>Cash</option>
-								<option>Card</option>
-								<option>Bank transfer</option>
-								<option>Other</option>
-							</select>
-						</div>
-						<div class="field full">
-							<label for="paymentDesc">Description</label>
-							<input
-								type="text"
-								id="paymentDesc"
-								placeholder="e.g. Monthly fee — September"
-							/>
-						</div>
-					</div>
-					<div class="sheet-actions">
-						<button class="btn" id="savePaymentBtn">Add payment</button>
-						<span class="form-msg" id="paymentMsg"></span>
-					</div>
-				</div>
+  <!-- ATTENDANCE -->
+  <section class="page" id="page-attendance">
+    <div class="tab-flag"><i style="background:var(--teal)"></i><span>Book 01</span></div>
+    <h1 class="page-title">Attendance register</h1>
+    <p class="page-lede">Pick a date, tick who's in, save the day. Every date you save becomes a new column in the register below — just like marking a physical attendance book.</p>
 
-				<p class="section-title">Payment book</p>
-				<div class="ledger-wrap">
-					<table class="ledger" id="studentPayTable">
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Student</th>
-								<th>NIC no.</th>
-								<th>Description</th>
-								<th>Method</th>
-								<th class="num">Amount</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot>
-							<tr>
-								<td colspan="5">Total collected</td>
-								<td class="num" id="studentPayTotal">Rs. 0.00</td>
-								<td></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</section>
+    <div class="sheet">
+      <h2>Mark attendance</h2>
+      <div class="att-controls">
+        <div class="field">
+          <label for="attDate">Date</label>
+          <input type="date" id="attDate">
+        </div>
+      </div>
+      <p class="section-title" id="attListTitle">Students</p>
+      <div class="att-list" id="attList"></div>
+      <div class="sheet-actions">
+        <button class="btn" id="saveAttendanceBtn">Save attendance for this date</button>
+        <span class="form-msg" id="attMsg"></span>
+      </div>
+    </div>
 
-			<!-- INSTITUTE PAYMENT -->
-			<section class="page" id="page-institutepay">
-				<div class="tab-flag">
-					<i style="background: var(--rust)"></i><span>Book 04</span>
-				</div>
-				<h1 class="page-title">Institute payments</h1>
-				<p class="page-lede">
-					Track what goes out — lecturers, electricity, water, rent and anything
-					else.
-				</p>
+    <p class="section-title">Register — one column per day</p>
+    <div class="ledger-wrap">
+      <table class="ledger" id="attendanceTable">
+        <thead><tr><th>Student</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
-				<div class="sheet">
-					<h2>New expense</h2>
-					<div class="field-grid">
-						<div class="field">
-							<label for="expCategory">Category</label>
-							<select id="expCategory">
-								<option>Lecturers</option>
-								<option>Electricity</option>
-								<option>Water</option>
-								<option>Rent</option>
-								<option>Other</option>
-							</select>
-						</div>
-						<div class="field">
-							<label for="expDate">Date</label>
-							<input type="date" id="expDate" />
-						</div>
-						<div class="field">
-							<label for="expAmount">Amount (Rs.)</label>
-							<input
-								type="number"
-								id="expAmount"
-								min="0"
-								step="0.01"
-								placeholder="0.00"
-							/>
-						</div>
-						<div class="field">
-							<label for="expDesc">Description</label>
-							<input
-								type="text"
-								id="expDesc"
-								placeholder="e.g. August electricity bill"
-							/>
-						</div>
-					</div>
-					<div class="sheet-actions">
-						<button class="btn" id="saveExpenseBtn">Add expense</button>
-						<span class="form-msg" id="expMsg"></span>
-					</div>
-				</div>
+  <!-- REGISTRATION -->
+  <section class="page" id="page-registration">
+    <div class="tab-flag"><i style="background:var(--azure)"></i><span>Book 02</span></div>
+    <h1 class="page-title">Student registration</h1>
+    <p class="page-lede">Enrol a new student. Once saved, they'll appear automatically in the attendance register and the payment book.</p>
 
-				<p class="section-title">Expense book</p>
-				<div class="ledger-wrap">
-					<table class="ledger" id="institutePayTable">
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Category</th>
-								<th>Description</th>
-								<th class="num">Amount</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot>
-							<tr>
-								<td colspan="3">Total expenses</td>
-								<td class="num" id="institutePayTotal">Rs. 0.00</td>
-								<td></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</section>
+    <div class="sheet">
+      <h2>New student</h2>
+      <div class="field-grid">
+        <div class="field">
+          <label for="regName">Student name</label>
+          <input type="text" id="regName" placeholder="e.g. Nadeesha Perera">
+        </div>
+        <div class="field">
+          <label for="regNic">NIC no.</label>
+          <input type="text" id="regNic" placeholder="e.g. 200145601234">
+        </div>
+        <div class="field full">
+          <label for="regAddress">Address</label>
+          <textarea id="regAddress" placeholder="e.g. 24 Lake Road, Maharagama"></textarea>
+        </div>
+        <div class="field">
+          <label for="regEmail">E-mail</label>
+          <input type="email" id="regEmail" placeholder="e.g. name@email.com">
+        </div>
+        <div></div>
 
-			<footer class="hint">
-				Records live in this browser tab only — use Backup to save a copy,
-				Restore to load one back in.
-			</footer>
-		</main>
+        <div class="field full">
+          <label>Education qualification</label>
+          <div id="eduQualList"></div>
+          <button type="button" class="qual-add" data-target="eduQualList" data-placeholder="e.g. BSc in Sports Science">
+            <span class="plus">+</span> Add another qualification
+          </button>
+        </div>
 
-		<input type="file" id="importFile" accept="application/json" hidden />
+        <div class="field full">
+          <label>Other qualification</label>
+          <div id="otherQualList"></div>
+          <button type="button" class="qual-add" data-target="otherQualList" data-placeholder="e.g. First Aid Certified">
+            <span class="plus">+</span> Add another qualification
+          </button>
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn" id="saveStudentBtn">Register student</button>
+        <span class="form-msg" id="regMsg"></span>
+      </div>
+    </div>
 
-		<script>
-			(function () {
-				"use strict";
+    <p class="section-title">All registered students</p>
+    <div class="ledger-wrap">
+      <table class="ledger" id="registrationTable">
+        <thead>
+          <tr>
+            <th>Name</th><th>NIC no.</th><th>Address</th><th>E-mail</th>
+            <th>Education qualification</th><th>Other qualification</th><th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
 
-				/* ---------------- State ---------------- */
-				const state = {
-					students: [], // {id, name, nic, address, email, edu:[], other:[]}
-					attendance: {}, // { 'YYYY-MM-DD': { studentId: 'P' | 'A' } }
-					studentPayments: [], // {id, studentId, date, amount, desc, method}
-					institutePayments: [], // {id, category, date, amount, desc}
-				};
-				let seq = 1;
-				const uid = () => "id" + seq++ + "-" + Date.now().toString(36);
-				const todayStr = () => new Date().toISOString().slice(0, 10);
-				const money = (n) =>
-					"Rs. " +
-					(Number(n) || 0).toLocaleString("en-LK", {
-						minimumFractionDigits: 2,
-						maximumFractionDigits: 2,
-					});
-				const esc = (s) =>
-					String(s == null ? "" : s).replace(
-						/[&<>"']/g,
-						(c) =>
-							({
-								"&": "&amp;",
-								"<": "&lt;",
-								">": "&gt;",
-								'"': "&quot;",
-								"'": "&#39;",
-							})[c],
-					);
-				const fmtDate = (d) => {
-					const dt = new Date(d + "T00:00:00");
-					if (isNaN(dt)) return d;
-					return dt.toLocaleDateString("en-GB", {
-						day: "2-digit",
-						month: "short",
-						year: "2-digit",
-					});
-				};
+  <!-- STUDENT PAYMENT -->
+  <section class="page" id="page-studentpay">
+    <div class="tab-flag"><i style="background:var(--gold)"></i><span>Book 03</span></div>
+    <h1 class="page-title">Student payments</h1>
+    <p class="page-lede">Log every fee as it comes in. Each entry writes a new line into the payment book below.</p>
 
-				/* ---------------- Navigation ---------------- */
-				const pages = [
-					"dashboard",
-					"attendance",
-					"registration",
-					"studentpay",
-					"institutepay",
-				];
-				function showPage(tab) {
-					pages.forEach((p) => {
-						document
-							.getElementById("page-" + p)
-							.classList.toggle("active", p === tab);
-					});
-					document.querySelectorAll(".navlinks button").forEach((b) => {
-						b.classList.toggle("active", b.dataset.tab === tab);
-					});
-					if (tab === "dashboard") renderDashboard();
-					if (tab === "attendance") {
-						renderAttendanceMarkList();
-						renderAttendanceLedger();
-					}
-					if (tab === "registration") renderRegistrationTable();
-					if (tab === "studentpay") {
-						refreshStudentDropdown();
-						renderStudentPayTable();
-					}
-					if (tab === "institutepay") renderInstitutePayTable();
-					window.scrollTo({ top: 0, behavior: "smooth" });
-				}
-				document.querySelectorAll("[data-tab]").forEach((el) => {
-					el.addEventListener("click", () => showPage(el.dataset.tab));
-				});
+    <div class="sheet">
+      <h2>New payment</h2>
+      <div class="field-grid">
+        <div class="field">
+          <label for="paymentStudent">Student</label>
+          <select id="paymentStudent"></select>
+        </div>
+        <div class="field">
+          <label for="paymentDate">Date</label>
+          <input type="date" id="paymentDate">
+        </div>
+        <div class="field">
+          <label for="paymentAmount">Amount (Rs.)</label>
+          <input type="number" id="paymentAmount" min="0" step="0.01" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label for="paymentMethod">Method</label>
+          <select id="paymentMethod">
+            <option>Cash</option>
+            <option>Card</option>
+            <option>Bank transfer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="paymentDesc">Description</label>
+          <input type="text" id="paymentDesc" placeholder="e.g. Monthly fee — September">
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn" id="savePaymentBtn">Add payment</button>
+        <span class="form-msg" id="paymentMsg"></span>
+      </div>
+    </div>
 
-				/* ---------------- Dashboard ---------------- */
-				function renderDashboard() {
-					document.getElementById("statStudents").textContent =
-						state.students.length;
-					const todays = state.attendance[todayStr()] || {};
-					const present = Object.values(todays).filter((v) => v === "P").length;
-					document.getElementById("statPresent").textContent = present;
-					const collected = state.studentPayments.reduce(
-						(s, p) => s + Number(p.amount || 0),
-						0,
-					);
-					const spent = state.institutePayments.reduce(
-						(s, p) => s + Number(p.amount || 0),
-						0,
-					);
-					document.getElementById("statCollected").textContent =
-						collected.toLocaleString("en-LK", { maximumFractionDigits: 0 });
-					document.getElementById("statSpent").textContent =
-						spent.toLocaleString("en-LK", { maximumFractionDigits: 0 });
-				}
+    <p class="section-title">Payment book</p>
+    <div class="ledger-wrap">
+      <table class="ledger" id="studentPayTable">
+        <thead>
+          <tr><th>Date</th><th>Student</th><th>NIC no.</th><th>Description</th><th>Method</th><th class="num">Amount</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot><tr><td colspan="5">Total collected</td><td class="num" id="studentPayTotal">Rs. 0.00</td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </section>
 
-				/* ---------------- Registration ---------------- */
-				function addQualRow(containerId, placeholder, value) {
-					const container = document.getElementById(containerId);
-					const row = document.createElement("div");
-					row.className = "qual-row";
-					row.innerHTML =
-						'<input type="text" placeholder="' +
-						esc(placeholder) +
-						'" value="' +
-						esc(value || "") +
-						'">' +
-						'<button type="button" class="qual-remove" aria-label="Remove qualification">×</button>';
-					row.querySelector(".qual-remove").addEventListener("click", () => {
-						if (container.children.length > 1) row.remove();
-						else row.querySelector("input").value = "";
-					});
-					container.appendChild(row);
-				}
-				document.querySelectorAll(".qual-add").forEach((btn) => {
-					btn.addEventListener("click", () =>
-						addQualRow(btn.dataset.target, btn.dataset.placeholder),
-					);
-				});
-				function resetQualList(containerId, placeholder) {
-					const container = document.getElementById(containerId);
-					container.innerHTML = "";
-					addQualRow(containerId, placeholder);
-				}
-				function collectQuals(containerId) {
-					return Array.from(
-						document.getElementById(containerId).querySelectorAll("input"),
-					)
-						.map((i) => i.value.trim())
-						.filter(Boolean);
-				}
-				resetQualList("eduQualList", "e.g. BSc in Sports Science");
-				resetQualList("otherQualList", "e.g. First Aid Certified");
+  <!-- INSTITUTE PAYMENT -->
+  <section class="page" id="page-institutepay">
+    <div class="tab-flag"><i style="background:var(--rust)"></i><span>Book 04</span></div>
+    <h1 class="page-title">Institute payments</h1>
+    <p class="page-lede">Track what goes out — lecturers, electricity, water, rent and anything else.</p>
 
-				document
-					.getElementById("saveStudentBtn")
-					.addEventListener("click", () => {
-						const name = document.getElementById("regName").value.trim();
-						const nic = document.getElementById("regNic").value.trim();
-						const address = document.getElementById("regAddress").value.trim();
-						const email = document.getElementById("regEmail").value.trim();
-						const msg = document.getElementById("regMsg");
-						if (!name || !nic) {
-							msg.textContent = "Name and NIC no. are required.";
-							return;
-						}
-						msg.textContent = "";
-						state.students.push({
-							id: uid(),
-							name,
-							nic,
-							address,
-							email,
-							edu: collectQuals("eduQualList"),
-							other: collectQuals("otherQualList"),
-						});
-						document.getElementById("regName").value = "";
-						document.getElementById("regNic").value = "";
-						document.getElementById("regAddress").value = "";
-						document.getElementById("regEmail").value = "";
-						resetQualList("eduQualList", "e.g. BSc in Sports Science");
-						resetQualList("otherQualList", "e.g. First Aid Certified");
-						renderRegistrationTable();
-					});
+    <div class="sheet">
+      <h2>New expense</h2>
+      <div class="field-grid">
+        <div class="field">
+          <label for="expCategory">Category</label>
+          <select id="expCategory">
+            <option>Lecturers</option>
+            <option>Electricity</option>
+            <option>Water</option>
+            <option>Rent</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="expDate">Date</label>
+          <input type="date" id="expDate">
+        </div>
+        <div class="field">
+          <label for="expAmount">Amount (Rs.)</label>
+          <input type="number" id="expAmount" min="0" step="0.01" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label for="expDesc">Description</label>
+          <input type="text" id="expDesc" placeholder="e.g. August electricity bill">
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn" id="saveExpenseBtn">Add expense</button>
+        <span class="form-msg" id="expMsg"></span>
+      </div>
+    </div>
 
-				function qualTags(list) {
-					if (!list || !list.length)
-						return '<span style="color:var(--muted-2)">—</span>';
-					return list
-						.map((q) => '<span class="qual-tag">' + esc(q) + "</span>")
-						.join("");
-				}
+    <p class="section-title">Expense book</p>
+    <div class="ledger-wrap">
+      <table class="ledger" id="institutePayTable">
+        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th class="num">Amount</th><th></th></tr></thead>
+        <tbody></tbody>
+        <tfoot><tr><td colspan="3">Total expenses</td><td class="num" id="institutePayTotal">Rs. 0.00</td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </section>
 
-				function renderRegistrationTable() {
-					const tbody = document.querySelector("#registrationTable tbody");
-					if (!state.students.length) {
-						tbody.innerHTML =
-							'<tr><td class="empty-row" colspan="7">No students registered yet — the first line of this book is waiting to be written.</td></tr>';
-						return;
-					}
-					tbody.innerHTML = state.students
-						.map(
-							(s) =>
-								"<tr>" +
-								'<td class="name-col">' +
-								esc(s.name) +
-								"</td>" +
-								"<td>" +
-								esc(s.nic) +
-								"</td>" +
-								"<td>" +
-								esc(s.address) +
-								"</td>" +
-								"<td>" +
-								esc(s.email) +
-								"</td>" +
-								"<td>" +
-								qualTags(s.edu) +
-								"</td>" +
-								"<td>" +
-								qualTags(s.other) +
-								"</td>" +
-								'<td><button class="row-del" data-id="' +
-								s.id +
-								'" aria-label="Remove student">🗑</button></td>' +
-								"</tr>",
-						)
-						.join("");
-					tbody.querySelectorAll(".row-del").forEach((b) => {
-						b.addEventListener("click", () => {
-							if (
-								!confirm(
-									"Remove this student and their records from attendance and payments?",
-								)
-							)
-								return;
-							const id = b.dataset.id;
-							state.students = state.students.filter((s) => s.id !== id);
-							Object.values(state.attendance).forEach((rec) => {
-								delete rec[id];
-							});
-							state.studentPayments = state.studentPayments.filter(
-								(p) => p.studentId !== id,
-							);
-							renderRegistrationTable();
-							renderAttendanceMarkList();
-							renderAttendanceLedger();
-							refreshStudentDropdown();
-							renderStudentPayTable();
-						});
-					});
-				}
+  <footer class="hint">Records live in this browser tab only — use Backup to save a copy, Restore to load one back in.</footer>
+</main>
 
-				/* ---------------- Attendance ---------------- */
-				const attDateInput = document.getElementById("attDate");
-				attDateInput.value = todayStr();
-				attDateInput.addEventListener("change", renderAttendanceMarkList);
+<input type="file" id="importFile" accept="application/json" hidden>
 
-				function renderAttendanceMarkList() {
-					const list = document.getElementById("attList");
-					const date = attDateInput.value || todayStr();
-					document.getElementById("attListTitle").textContent =
-						"Students — " + fmtDate(date);
-					if (!state.students.length) {
-						list.innerHTML =
-							'<p style="color:var(--muted-2); font-size:13px;">No students registered yet. Add one on the Registration page first.</p>';
-						return;
-					}
-					const existing = state.attendance[date] || null;
-					list.innerHTML = state.students
-						.map((s) => {
-							const checked = existing ? existing[s.id] === "P" : true;
-							return (
-								'<label class="att-item">' +
-								'<input type="checkbox" data-id="' +
-								s.id +
-								'" ' +
-								(checked ? "checked" : "") +
-								">" +
-								'<span class="who">' +
-								esc(s.name) +
-								"<small>" +
-								esc(s.nic) +
-								"</small></span>" +
-								"</label>"
-							);
-						})
-						.join("");
-				}
+<script>
+(function(){
+  "use strict";
 
-				document
-					.getElementById("saveAttendanceBtn")
-					.addEventListener("click", () => {
-						const date = attDateInput.value;
-						const msg = document.getElementById("attMsg");
-						if (!date) {
-							msg.textContent = "Pick a date first.";
-							return;
-						}
-						if (!state.students.length) {
-							msg.textContent = "Register a student before taking attendance.";
-							return;
-						}
-						const record = {};
-						document
-							.querySelectorAll('#attList input[type="checkbox"]')
-							.forEach((cb) => {
-								record[cb.dataset.id] = cb.checked ? "P" : "A";
-							});
-						state.attendance[date] = record;
-						msg.textContent = "Saved attendance for " + fmtDate(date) + ".";
-						setTimeout(() => {
-							if (msg.textContent.startsWith("Saved")) msg.textContent = "";
-						}, 3000);
-						renderAttendanceLedger();
-						renderDashboard();
-					});
+  /* ---------------- State ---------------- */
+  const state = {
+    students: [],          // {id, name, nic, address, email, edu:[], other:[]}
+    attendance: {},         // { 'YYYY-MM-DD': { studentId: 'P' | 'A' } }
+    studentPayments: [],    // {id, studentId, date, amount, desc, method}
+    institutePayments: []   // {id, category, date, amount, desc}
+  };
+  let seq = 1;
+  const uid = () => 'id' + (seq++) + '-' + Date.now().toString(36);
+  const STORAGE_KEY = 'ironledger-data';
+  let storageAvailable = !!(window.storage && typeof window.storage.get === 'function');
+  let saveFlashTimer;
 
-				function renderAttendanceLedger() {
-					const table = document.getElementById("attendanceTable");
-					const thead = table.querySelector("thead tr");
-					const tbody = table.querySelector("tbody");
-					const dates = Object.keys(state.attendance).sort();
+  function flashSaved(){
+    const el = document.getElementById('saveStatus');
+    if (!el) return;
+    el.classList.remove('warn');
+    el.textContent = 'Saved';
+    clearTimeout(saveFlashTimer);
+    saveFlashTimer = setTimeout(() => { el.textContent = ''; }, 1500);
+  }
+  function flashSaveError(text){
+    const el = document.getElementById('saveStatus');
+    if (!el) return;
+    el.classList.add('warn');
+    el.textContent = text || 'Save failed';
+  }
 
-					thead.innerHTML =
-						"<th>Student</th>" +
-						dates.map((d) => "<th>" + fmtDate(d) + "</th>").join("");
+  async function loadState(){
+    if (!storageAvailable) return;
+    try{
+      const result = await window.storage.get(STORAGE_KEY, false);
+      if (result && result.value){
+        const data = JSON.parse(result.value);
+        state.students = Array.isArray(data.students) ? data.students : [];
+        state.attendance = data.attendance && typeof data.attendance === 'object' ? data.attendance : {};
+        state.studentPayments = Array.isArray(data.studentPayments) ? data.studentPayments : [];
+        state.institutePayments = Array.isArray(data.institutePayments) ? data.institutePayments : [];
+      }
+    }catch(err){
+      // Nothing saved yet, or the read failed — start with an empty ledger.
+      console.warn('IRONLEDGER: no saved data loaded', err);
+    }
+  }
 
-					if (!state.students.length) {
-						tbody.innerHTML =
-							'<tr><td class="empty-row" colspan="' +
-							(dates.length + 1) +
-							'">No students registered yet.</td></tr>';
-						return;
-					}
-					if (!dates.length) {
-						tbody.innerHTML =
-							'<tr><td class="empty-row" colspan="1">No attendance marked yet — save a date above to open the register.</td></tr>';
-						return;
-					}
-					tbody.innerHTML = state.students
-						.map((s) => {
-							const cells = dates
-								.map((d) => {
-									const v = (state.attendance[d] || {})[s.id];
-									if (v === "P")
-										return '<td><span class="mark present">P</span></td>';
-									if (v === "A")
-										return '<td><span class="mark absent">A</span></td>';
-									return '<td><span class="mark none">—</span></td>';
-								})
-								.join("");
-							return (
-								'<tr><td class="name-col">' +
-								esc(s.name) +
-								"</td>" +
-								cells +
-								"</tr>"
-							);
-						})
-						.join("");
-				}
+  async function saveState(){
+    if (!storageAvailable){ flashSaveError('Auto-save unavailable'); return; }
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+      flashSaved();
+    }catch(err){
+      console.warn('IRONLEDGER: save failed', err);
+      flashSaveError();
+    }
+  }
+  const todayStr = () => new Date().toISOString().slice(0,10);
+  const money = (n) => 'Rs. ' + (Number(n)||0).toLocaleString('en-LK', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmtDate = (d) => {
+    const dt = new Date(d + 'T00:00:00');
+    if (isNaN(dt)) return d;
+    return dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'2-digit'});
+  };
 
-				/* ---------------- Student payments ---------------- */
-				document.getElementById("paymentDate").value = todayStr();
+  /* ---------------- Navigation ---------------- */
+  const pages = ['dashboard','attendance','registration','studentpay','institutepay'];
+  function showPage(tab){
+    pages.forEach(p => {
+      document.getElementById('page-'+p).classList.toggle('active', p === tab);
+    });
+    document.querySelectorAll('.navlinks button').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    if (tab === 'dashboard') renderDashboard();
+    if (tab === 'attendance') { renderAttendanceMarkList(); renderAttendanceLedger(); }
+    if (tab === 'registration') renderRegistrationTable();
+    if (tab === 'studentpay') { refreshStudentDropdown(); renderStudentPayTable(); }
+    if (tab === 'institutepay') renderInstitutePayTable();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    el.addEventListener('click', () => showPage(el.dataset.tab));
+  });
 
-				function refreshStudentDropdown() {
-					const sel = document.getElementById("paymentStudent");
-					const current = sel.value;
-					if (!state.students.length) {
-						sel.innerHTML = '<option value="">No students registered</option>';
-						return;
-					}
-					sel.innerHTML = state.students
-						.map(
-							(s) =>
-								'<option value="' +
-								s.id +
-								'">' +
-								esc(s.name) +
-								" — " +
-								esc(s.nic) +
-								"</option>",
-						)
-						.join("");
-					if (current && state.students.some((s) => s.id === current))
-						sel.value = current;
-				}
+  /* ---------------- Dashboard ---------------- */
+  function renderDashboard(){
+    document.getElementById('statStudents').textContent = state.students.length;
+    const todays = state.attendance[todayStr()] || {};
+    const present = Object.values(todays).filter(v => v === 'P').length;
+    document.getElementById('statPresent').textContent = present;
+    const collected = state.studentPayments.reduce((s,p) => s + Number(p.amount||0), 0);
+    const spent = state.institutePayments.reduce((s,p) => s + Number(p.amount||0), 0);
+    document.getElementById('statCollected').textContent = collected.toLocaleString('en-LK', {maximumFractionDigits:0});
+    document.getElementById('statSpent').textContent = spent.toLocaleString('en-LK', {maximumFractionDigits:0});
+  }
 
-				document
-					.getElementById("savePaymentBtn")
-					.addEventListener("click", () => {
-						const studentId = document.getElementById("paymentStudent").value;
-						const date = document.getElementById("paymentDate").value;
-						const amount = parseFloat(
-							document.getElementById("paymentAmount").value,
-						);
-						const method = document.getElementById("paymentMethod").value;
-						const desc = document.getElementById("paymentDesc").value.trim();
-						const msg = document.getElementById("paymentMsg");
-						if (!studentId) {
-							msg.textContent = "Register and select a student first.";
-							return;
-						}
-						if (!date || !amount || amount <= 0) {
-							msg.textContent = "Enter a date and an amount greater than zero.";
-							return;
-						}
-						msg.textContent = "";
-						state.studentPayments.push({
-							id: uid(),
-							studentId,
-							date,
-							amount,
-							method,
-							desc,
-						});
-						document.getElementById("paymentAmount").value = "";
-						document.getElementById("paymentDesc").value = "";
-						renderStudentPayTable();
-						renderDashboard();
-					});
+  /* ---------------- Registration ---------------- */
+  function addQualRow(containerId, placeholder, value){
+    const container = document.getElementById(containerId);
+    const row = document.createElement('div');
+    row.className = 'qual-row';
+    row.innerHTML =
+      '<input type="text" placeholder="' + esc(placeholder) + '" value="' + esc(value||'') + '">' +
+      '<button type="button" class="qual-remove" aria-label="Remove qualification">×</button>';
+    row.querySelector('.qual-remove').addEventListener('click', () => {
+      if (container.children.length > 1) row.remove();
+      else row.querySelector('input').value = '';
+    });
+    container.appendChild(row);
+  }
+  document.querySelectorAll('.qual-add').forEach(btn => {
+    btn.addEventListener('click', () => addQualRow(btn.dataset.target, btn.dataset.placeholder));
+  });
+  function resetQualList(containerId, placeholder){
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    addQualRow(containerId, placeholder);
+  }
+  function collectQuals(containerId){
+    return Array.from(document.getElementById(containerId).querySelectorAll('input'))
+      .map(i => i.value.trim()).filter(Boolean);
+  }
+  resetQualList('eduQualList', 'e.g. BSc in Sports Science');
+  resetQualList('otherQualList', 'e.g. First Aid Certified');
 
-				function renderStudentPayTable() {
-					const tbody = document.querySelector("#studentPayTable tbody");
-					if (!state.studentPayments.length) {
-						tbody.innerHTML =
-							'<tr><td class="empty-row" colspan="7">No payments logged yet — the first line of this book is waiting to be written.</td></tr>';
-						document.getElementById("studentPayTotal").textContent = money(0);
-						return;
-					}
-					tbody.innerHTML = state.studentPayments
-						.map((p) => {
-							const s = state.students.find((x) => x.id === p.studentId);
-							return (
-								"<tr>" +
-								"<td>" +
-								fmtDate(p.date) +
-								"</td>" +
-								'<td class="name-col">' +
-								esc(s ? s.name : "Removed student") +
-								"</td>" +
-								"<td>" +
-								esc(s ? s.nic : "—") +
-								"</td>" +
-								"<td>" +
-								esc(p.desc || "—") +
-								"</td>" +
-								"<td>" +
-								esc(p.method) +
-								"</td>" +
-								'<td class="num">' +
-								money(p.amount) +
-								"</td>" +
-								'<td><button class="row-del" data-id="' +
-								p.id +
-								'" aria-label="Remove payment">🗑</button></td>' +
-								"</tr>"
-							);
-						})
-						.join("");
-					const total = state.studentPayments.reduce(
-						(s, p) => s + Number(p.amount || 0),
-						0,
-					);
-					document.getElementById("studentPayTotal").textContent = money(total);
-					tbody.querySelectorAll(".row-del").forEach((b) => {
-						b.addEventListener("click", () => {
-							state.studentPayments = state.studentPayments.filter(
-								(p) => p.id !== b.dataset.id,
-							);
-							renderStudentPayTable();
-							renderDashboard();
-						});
-					});
-				}
+  document.getElementById('saveStudentBtn').addEventListener('click', () => {
+    const name = document.getElementById('regName').value.trim();
+    const nic = document.getElementById('regNic').value.trim();
+    const address = document.getElementById('regAddress').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const msg = document.getElementById('regMsg');
+    if (!name || !nic){
+      msg.textContent = 'Name and NIC no. are required.';
+      return;
+    }
+    msg.textContent = '';
+    state.students.push({
+      id: uid(), name, nic, address, email,
+      edu: collectQuals('eduQualList'),
+      other: collectQuals('otherQualList')
+    });
+    document.getElementById('regName').value = '';
+    document.getElementById('regNic').value = '';
+    document.getElementById('regAddress').value = '';
+    document.getElementById('regEmail').value = '';
+    resetQualList('eduQualList', 'e.g. BSc in Sports Science');
+    resetQualList('otherQualList', 'e.g. First Aid Certified');
+    renderRegistrationTable();
+    saveState();
+  });
 
-				/* ---------------- Institute payments ---------------- */
-				document.getElementById("expDate").value = todayStr();
+  function qualTags(list){
+    if (!list || !list.length) return '<span style="color:var(--muted-2)">—</span>';
+    return list.map(q => '<span class="qual-tag">'+esc(q)+'</span>').join('');
+  }
 
-				document
-					.getElementById("saveExpenseBtn")
-					.addEventListener("click", () => {
-						const category = document.getElementById("expCategory").value;
-						const date = document.getElementById("expDate").value;
-						const amount = parseFloat(
-							document.getElementById("expAmount").value,
-						);
-						const desc = document.getElementById("expDesc").value.trim();
-						const msg = document.getElementById("expMsg");
-						if (!date || !amount || amount <= 0) {
-							msg.textContent = "Enter a date and an amount greater than zero.";
-							return;
-						}
-						msg.textContent = "";
-						state.institutePayments.push({
-							id: uid(),
-							category,
-							date,
-							amount,
-							desc,
-						});
-						document.getElementById("expAmount").value = "";
-						document.getElementById("expDesc").value = "";
-						renderInstitutePayTable();
-						renderDashboard();
-					});
+  function renderRegistrationTable(){
+    const tbody = document.querySelector('#registrationTable tbody');
+    if (!state.students.length){
+      tbody.innerHTML = '<tr><td class="empty-row" colspan="7">No students registered yet — the first line of this book is waiting to be written.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = state.students.map(s => (
+      '<tr>' +
+      '<td class="name-col">'+esc(s.name)+'</td>' +
+      '<td>'+esc(s.nic)+'</td>' +
+      '<td>'+esc(s.address)+'</td>' +
+      '<td>'+esc(s.email)+'</td>' +
+      '<td>'+qualTags(s.edu)+'</td>' +
+      '<td>'+qualTags(s.other)+'</td>' +
+      '<td><button class="row-del" data-id="'+s.id+'" aria-label="Remove student">🗑</button></td>' +
+      '</tr>'
+    )).join('');
+    tbody.querySelectorAll('.row-del').forEach(b => {
+      b.addEventListener('click', () => {
+        if (!confirm('Remove this student and their records from attendance and payments?')) return;
+        const id = b.dataset.id;
+        state.students = state.students.filter(s => s.id !== id);
+        Object.values(state.attendance).forEach(rec => { delete rec[id]; });
+        state.studentPayments = state.studentPayments.filter(p => p.studentId !== id);
+        renderRegistrationTable();
+        renderAttendanceMarkList(); renderAttendanceLedger();
+        refreshStudentDropdown(); renderStudentPayTable();
+        saveState();
+      });
+    });
+  }
 
-				function renderInstitutePayTable() {
-					const tbody = document.querySelector("#institutePayTable tbody");
-					if (!state.institutePayments.length) {
-						tbody.innerHTML =
-							'<tr><td class="empty-row" colspan="5">No expenses logged yet — the first line of this book is waiting to be written.</td></tr>';
-						document.getElementById("institutePayTotal").textContent = money(0);
-						return;
-					}
-					tbody.innerHTML = state.institutePayments
-						.map(
-							(p) =>
-								"<tr>" +
-								"<td>" +
-								fmtDate(p.date) +
-								"</td>" +
-								'<td class="name-col">' +
-								esc(p.category) +
-								"</td>" +
-								"<td>" +
-								esc(p.desc || "—") +
-								"</td>" +
-								'<td class="num">' +
-								money(p.amount) +
-								"</td>" +
-								'<td><button class="row-del" data-id="' +
-								p.id +
-								'" aria-label="Remove expense">🗑</button></td>' +
-								"</tr>",
-						)
-						.join("");
-					const total = state.institutePayments.reduce(
-						(s, p) => s + Number(p.amount || 0),
-						0,
-					);
-					document.getElementById("institutePayTotal").textContent =
-						money(total);
-					tbody.querySelectorAll(".row-del").forEach((b) => {
-						b.addEventListener("click", () => {
-							state.institutePayments = state.institutePayments.filter(
-								(p) => p.id !== b.dataset.id,
-							);
-							renderInstitutePayTable();
-							renderDashboard();
-						});
-					});
-				}
+  /* ---------------- Attendance ---------------- */
+  const attDateInput = document.getElementById('attDate');
+  attDateInput.value = todayStr();
+  attDateInput.addEventListener('change', renderAttendanceMarkList);
 
-				/* ---------------- Backup / restore ---------------- */
-				document.getElementById("exportBtn").addEventListener("click", () => {
-					const blob = new Blob([JSON.stringify(state, null, 2)], {
-						type: "application/json",
-					});
-					const url = URL.createObjectURL(blob);
-					const a = document.createElement("a");
-					a.href = url;
-					a.download = "ironledger-backup-" + todayStr() + ".json";
-					document.body.appendChild(a);
-					a.click();
-					a.remove();
-					URL.revokeObjectURL(url);
-				});
+  function renderAttendanceMarkList(){
+    const list = document.getElementById('attList');
+    const date = attDateInput.value || todayStr();
+    document.getElementById('attListTitle').textContent = 'Students — ' + fmtDate(date);
+    if (!state.students.length){
+      list.innerHTML = '<p style="color:var(--muted-2); font-size:13px;">No students registered yet. Add one on the Registration page first.</p>';
+      return;
+    }
+    const existing = state.attendance[date] || null;
+    list.innerHTML = state.students.map(s => {
+      const checked = existing ? (existing[s.id] === 'P') : true;
+      return '<label class="att-item">' +
+        '<input type="checkbox" data-id="'+s.id+'" '+(checked?'checked':'')+'>' +
+        '<span class="who">'+esc(s.name)+'<small>'+esc(s.nic)+'</small></span>' +
+        '</label>';
+    }).join('');
+  }
 
-				const importFile = document.getElementById("importFile");
-				document
-					.getElementById("importBtn")
-					.addEventListener("click", () => importFile.click());
-				importFile.addEventListener("change", () => {
-					const file = importFile.files[0];
-					if (!file) return;
-					const reader = new FileReader();
-					reader.onload = () => {
-						try {
-							const data = JSON.parse(reader.result);
-							if (!data || typeof data !== "object")
-								throw new Error("bad file");
-							state.students = Array.isArray(data.students)
-								? data.students
-								: [];
-							state.attendance =
-								data.attendance && typeof data.attendance === "object"
-									? data.attendance
-									: {};
-							state.studentPayments = Array.isArray(data.studentPayments)
-								? data.studentPayments
-								: [];
-							state.institutePayments = Array.isArray(data.institutePayments)
-								? data.institutePayments
-								: [];
-							renderRegistrationTable();
-							renderAttendanceMarkList();
-							renderAttendanceLedger();
-							refreshStudentDropdown();
-							renderStudentPayTable();
-							renderInstitutePayTable();
-							renderDashboard();
-							alert("Records restored from backup.");
-						} catch (e) {
-							alert("That file could not be read as an IRONLEDGER backup.");
-						}
-						importFile.value = "";
-					};
-					reader.readAsText(file);
-				});
+  document.getElementById('saveAttendanceBtn').addEventListener('click', () => {
+    const date = attDateInput.value;
+    const msg = document.getElementById('attMsg');
+    if (!date){ msg.textContent = 'Pick a date first.'; return; }
+    if (!state.students.length){ msg.textContent = 'Register a student before taking attendance.'; return; }
+    const record = {};
+    document.querySelectorAll('#attList input[type="checkbox"]').forEach(cb => {
+      record[cb.dataset.id] = cb.checked ? 'P' : 'A';
+    });
+    state.attendance[date] = record;
+    msg.textContent = 'Saved attendance for ' + fmtDate(date) + '.';
+    setTimeout(() => { if (msg.textContent.startsWith('Saved')) msg.textContent = ''; }, 3000);
+    renderAttendanceLedger();
+    renderDashboard();
+    saveState();
+  });
 
-				/* ---------------- Init ---------------- */
-				refreshStudentDropdown();
-				renderDashboard();
-				renderRegistrationTable();
-				renderAttendanceMarkList();
-				renderAttendanceLedger();
-				renderStudentPayTable();
-				renderInstitutePayTable();
-			})();
-		</script>
-	</body>
+  function renderAttendanceLedger(){
+    const table = document.getElementById('attendanceTable');
+    const thead = table.querySelector('thead tr');
+    const tbody = table.querySelector('tbody');
+    const dates = Object.keys(state.attendance).sort();
+
+    thead.innerHTML = '<th>Student</th>' + dates.map(d => '<th>'+fmtDate(d)+'</th>').join('');
+
+    if (!state.students.length){
+      tbody.innerHTML = '<tr><td class="empty-row" colspan="'+(dates.length+1)+'">No students registered yet.</td></tr>';
+      return;
+    }
+    if (!dates.length){
+      tbody.innerHTML = '<tr><td class="empty-row" colspan="1">No attendance marked yet — save a date above to open the register.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = state.students.map(s => {
+      const cells = dates.map(d => {
+        const v = (state.attendance[d] || {})[s.id];
+        if (v === 'P') return '<td><span class="mark present">P</span></td>';
+        if (v === 'A') return '<td><span class="mark absent">A</span></td>';
+        return '<td><span class="mark none">—</span></td>';
+      }).join('');
+      return '<tr><td class="name-col">'+esc(s.name)+'</td>'+cells+'</tr>';
+    }).join('');
+  }
+
+  /* ---------------- Student payments ---------------- */
+  document.getElementById('paymentDate').value = todayStr();
+
+  function refreshStudentDropdown(){
+    const sel = document.getElementById('paymentStudent');
+    const current = sel.value;
+    if (!state.students.length){
+      sel.innerHTML = '<option value="">No students registered</option>';
+      return;
+    }
+    sel.innerHTML = state.students.map(s => '<option value="'+s.id+'">'+esc(s.name)+' — '+esc(s.nic)+'</option>').join('');
+    if (current && state.students.some(s => s.id === current)) sel.value = current;
+  }
+
+  document.getElementById('savePaymentBtn').addEventListener('click', () => {
+    const studentId = document.getElementById('paymentStudent').value;
+    const date = document.getElementById('paymentDate').value;
+    const amount = parseFloat(document.getElementById('paymentAmount').value);
+    const method = document.getElementById('paymentMethod').value;
+    const desc = document.getElementById('paymentDesc').value.trim();
+    const msg = document.getElementById('paymentMsg');
+    if (!studentId){ msg.textContent = 'Register and select a student first.'; return; }
+    if (!date || !amount || amount <= 0){ msg.textContent = 'Enter a date and an amount greater than zero.'; return; }
+    msg.textContent = '';
+    state.studentPayments.push({ id: uid(), studentId, date, amount, method, desc });
+    document.getElementById('paymentAmount').value = '';
+    document.getElementById('paymentDesc').value = '';
+    renderStudentPayTable();
+    renderDashboard();
+    saveState();
+  });
+
+  function renderStudentPayTable(){
+    const tbody = document.querySelector('#studentPayTable tbody');
+    if (!state.studentPayments.length){
+      tbody.innerHTML = '<tr><td class="empty-row" colspan="7">No payments logged yet — the first line of this book is waiting to be written.</td></tr>';
+      document.getElementById('studentPayTotal').textContent = money(0);
+      return;
+    }
+    tbody.innerHTML = state.studentPayments.map(p => {
+      const s = state.students.find(x => x.id === p.studentId);
+      return '<tr>' +
+        '<td>'+fmtDate(p.date)+'</td>' +
+        '<td class="name-col">'+esc(s ? s.name : 'Removed student')+'</td>' +
+        '<td>'+esc(s ? s.nic : '—')+'</td>' +
+        '<td>'+esc(p.desc||'—')+'</td>' +
+        '<td>'+esc(p.method)+'</td>' +
+        '<td class="num">'+money(p.amount)+'</td>' +
+        '<td><button class="row-del" data-id="'+p.id+'" aria-label="Remove payment">🗑</button></td>' +
+        '</tr>';
+    }).join('');
+    const total = state.studentPayments.reduce((s,p) => s + Number(p.amount||0), 0);
+    document.getElementById('studentPayTotal').textContent = money(total);
+    tbody.querySelectorAll('.row-del').forEach(b => {
+      b.addEventListener('click', () => {
+        state.studentPayments = state.studentPayments.filter(p => p.id !== b.dataset.id);
+        renderStudentPayTable();
+        renderDashboard();
+        saveState();
+      });
+    });
+  }
+
+  /* ---------------- Institute payments ---------------- */
+  document.getElementById('expDate').value = todayStr();
+
+  document.getElementById('saveExpenseBtn').addEventListener('click', () => {
+    const category = document.getElementById('expCategory').value;
+    const date = document.getElementById('expDate').value;
+    const amount = parseFloat(document.getElementById('expAmount').value);
+    const desc = document.getElementById('expDesc').value.trim();
+    const msg = document.getElementById('expMsg');
+    if (!date || !amount || amount <= 0){ msg.textContent = 'Enter a date and an amount greater than zero.'; return; }
+    msg.textContent = '';
+    state.institutePayments.push({ id: uid(), category, date, amount, desc });
+    document.getElementById('expAmount').value = '';
+    document.getElementById('expDesc').value = '';
+    renderInstitutePayTable();
+    renderDashboard();
+    saveState();
+  });
+
+  function renderInstitutePayTable(){
+    const tbody = document.querySelector('#institutePayTable tbody');
+    if (!state.institutePayments.length){
+      tbody.innerHTML = '<tr><td class="empty-row" colspan="5">No expenses logged yet — the first line of this book is waiting to be written.</td></tr>';
+      document.getElementById('institutePayTotal').textContent = money(0);
+      return;
+    }
+    tbody.innerHTML = state.institutePayments.map(p => (
+      '<tr>' +
+      '<td>'+fmtDate(p.date)+'</td>' +
+      '<td class="name-col">'+esc(p.category)+'</td>' +
+      '<td>'+esc(p.desc||'—')+'</td>' +
+      '<td class="num">'+money(p.amount)+'</td>' +
+      '<td><button class="row-del" data-id="'+p.id+'" aria-label="Remove expense">🗑</button></td>' +
+      '</tr>'
+    )).join('');
+    const total = state.institutePayments.reduce((s,p) => s + Number(p.amount||0), 0);
+    document.getElementById('institutePayTotal').textContent = money(total);
+    tbody.querySelectorAll('.row-del').forEach(b => {
+      b.addEventListener('click', () => {
+        state.institutePayments = state.institutePayments.filter(p => p.id !== b.dataset.id);
+        renderInstitutePayTable();
+        renderDashboard();
+        saveState();
+      });
+    });
+  }
+
+  /* ---------------- Backup / restore ---------------- */
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ironledger-backup-' + todayStr() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  const importFile = document.getElementById('importFile');
+  document.getElementById('importBtn').addEventListener('click', () => importFile.click());
+  importFile.addEventListener('change', () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const data = JSON.parse(reader.result);
+        if (!data || typeof data !== 'object') throw new Error('bad file');
+        state.students = Array.isArray(data.students) ? data.students : [];
+        state.attendance = data.attendance && typeof data.attendance === 'object' ? data.attendance : {};
+        state.studentPayments = Array.isArray(data.studentPayments) ? data.studentPayments : [];
+        state.institutePayments = Array.isArray(data.institutePayments) ? data.institutePayments : [];
+        renderRegistrationTable();
+        renderAttendanceMarkList(); renderAttendanceLedger();
+        refreshStudentDropdown(); renderStudentPayTable();
+        renderInstitutePayTable();
+        renderDashboard();
+        saveState();
+        alert('Records restored from backup.');
+      }catch(e){
+        alert('That file could not be read as an IRONLEDGER backup.');
+      }
+      importFile.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!confirm('This will permanently erase every student, attendance mark and payment on record. Continue?')) return;
+    state.students = [];
+    state.attendance = {};
+    state.studentPayments = [];
+    state.institutePayments = [];
+    refreshStudentDropdown();
+    renderDashboard();
+    renderRegistrationTable();
+    renderAttendanceMarkList();
+    renderAttendanceLedger();
+    renderStudentPayTable();
+    renderInstitutePayTable();
+    saveState();
+  });
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    await loadState();
+    refreshStudentDropdown();
+    renderDashboard();
+    renderRegistrationTable();
+    renderAttendanceMarkList();
+    renderAttendanceLedger();
+    renderStudentPayTable();
+    renderInstitutePayTable();
+    if (!storageAvailable){
+      flashSaveError('Auto-save unavailable — use Backup / Restore');
+    }
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay){
+      overlay.classList.add('hide');
+      setTimeout(() => overlay.remove(), 400);
+    }
+  }
+  init();
+})();
+</script>
+</body>
 </html>
