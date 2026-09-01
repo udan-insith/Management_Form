@@ -1375,6 +1375,120 @@
 						})
 						.join("");
 				}
+
+				/* ---------------- Student payments ---------------- */
+				document.getElementById("paymentDate").value = todayStr();
+
+				function refreshStudentDropdown() {
+					const sel = document.getElementById("paymentStudent");
+					const current = sel.value;
+					if (!state.students.length) {
+						sel.innerHTML = '<option value="">No students registered</option>';
+						return;
+					}
+					sel.innerHTML = state.students
+						.map(
+							(s) =>
+								'<option value="' +
+								s.id +
+								'">' +
+								esc(s.name) +
+								" — " +
+								esc(s.nic) +
+								"</option>",
+						)
+						.join("");
+					if (current && state.students.some((s) => s.id === current))
+						sel.value = current;
+				}
+
+				document
+					.getElementById("savePaymentBtn")
+					.addEventListener("click", () => {
+						const studentId = document.getElementById("paymentStudent").value;
+						const date = document.getElementById("paymentDate").value;
+						const amount = parseFloat(
+							document.getElementById("paymentAmount").value,
+						);
+						const method = document.getElementById("paymentMethod").value;
+						const desc = document.getElementById("paymentDesc").value.trim();
+						const msg = document.getElementById("paymentMsg");
+						if (!studentId) {
+							msg.textContent = "Register and select a student first.";
+							return;
+						}
+						if (!date || !amount || amount <= 0) {
+							msg.textContent = "Enter a date and an amount greater than zero.";
+							return;
+						}
+						msg.textContent = "";
+						state.studentPayments.push({
+							id: uid(),
+							studentId,
+							date,
+							amount,
+							method,
+							desc,
+						});
+						document.getElementById("paymentAmount").value = "";
+						document.getElementById("paymentDesc").value = "";
+						renderStudentPayTable();
+						renderDashboard();
+					});
+
+				function renderStudentPayTable() {
+					const tbody = document.querySelector("#studentPayTable tbody");
+					if (!state.studentPayments.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="7">No payments logged yet — the first line of this book is waiting to be written.</td></tr>';
+						document.getElementById("studentPayTotal").textContent = money(0);
+						return;
+					}
+					tbody.innerHTML = state.studentPayments
+						.map((p) => {
+							const s = state.students.find((x) => x.id === p.studentId);
+							return (
+								"<tr>" +
+								"<td>" +
+								fmtDate(p.date) +
+								"</td>" +
+								'<td class="name-col">' +
+								esc(s ? s.name : "Removed student") +
+								"</td>" +
+								"<td>" +
+								esc(s ? s.nic : "—") +
+								"</td>" +
+								"<td>" +
+								esc(p.desc || "—") +
+								"</td>" +
+								"<td>" +
+								esc(p.method) +
+								"</td>" +
+								'<td class="num">' +
+								money(p.amount) +
+								"</td>" +
+								'<td><button class="row-del" data-id="' +
+								p.id +
+								'" aria-label="Remove payment">🗑</button></td>' +
+								"</tr>"
+							);
+						})
+						.join("");
+					const total = state.studentPayments.reduce(
+						(s, p) => s + Number(p.amount || 0),
+						0,
+					);
+					document.getElementById("studentPayTotal").textContent = money(total);
+					tbody.querySelectorAll(".row-del").forEach((b) => {
+						b.addEventListener("click", () => {
+							state.studentPayments = state.studentPayments.filter(
+								(p) => p.id !== b.dataset.id,
+							);
+							renderStudentPayTable();
+							renderDashboard();
+						});
+					});
+				}
 			});
 		</script>
 	</body>
