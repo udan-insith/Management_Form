@@ -555,6 +555,81 @@
 				font-style: italic;
 				padding: 34px 16px !important;
 			}
+
+			/* ATTENDANCE CONTROL */
+			.att-controls {
+				display: flex;
+				align-items: flex-end;
+				gap: 20px;
+				flex-wrap: wrap;
+				margin-bottom: 18px;
+			}
+			.att-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+				gap: 10px;
+				margin: 18px 0 20px;
+			}
+			.att-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				background: var(--panel-2);
+				border: 1px solid var(--line);
+				padding: 10px 12px;
+				border-radius: 3px;
+			}
+			.att-item input {
+				width: 16px;
+				height: 16px;
+				accent-color: var(--teal);
+			}
+			.att-item .who {
+				font-size: 13.5px;
+			}
+			.att-item .who small {
+				display: block;
+				color: var(--muted-2);
+				font-size: 11px;
+			}
+
+			.section-title {
+				font-size: 13px;
+				color: var(--muted);
+				margin: 0 0 12px;
+				font-weight: 600;
+			}
+
+			footer.hint {
+				text-align: center;
+				color: var(--muted-2);
+				font-size: 12px;
+				margin-top: 60px;
+			}
+
+			@media (max-width: 880px) {
+				.field-grid {
+					grid-template-columns: 1fr;
+				}
+				.stat-row,
+				.nav-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.topbar {
+					flex-wrap: wrap;
+				}
+				.navlinks {
+					order: 3;
+					width: 100%;
+					justify-content: space-between;
+				}
+			}
+			@media (max-width: 520px) {
+				.stat-row,
+				.nav-grid {
+					grid-template-columns: 1fr;
+				}
+			}
 		</style>
 	</head>
 	<body></body>
