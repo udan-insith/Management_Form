@@ -297,6 +297,157 @@
 				color: var(--muted-2);
 				font-size: 18px;
 			}
+			/* FORMS */
+			.sheet {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				padding: clamp(18px, 3vw, 30px);
+				margin-bottom: 34px;
+			}
+			.sheet h2 {
+				font-family: var(--font-display);
+				font-weight: 400;
+				font-size: 20px;
+				letter-spacing: 0.3px;
+				margin: 0 0 18px;
+				color: var(--text);
+			}
+			.field-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 20px 24px;
+			}
+			.field {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+			}
+			.field.full {
+				grid-column: 1 / -1;
+			}
+			.field label {
+				font-size: 12.5px;
+				color: var(--muted);
+			}
+			.field input[type="text"],
+			.field input[type="email"],
+			.field input[type="date"],
+			.field input[type="number"],
+			.field select,
+			.field textarea {
+				background: transparent;
+				border: none;
+				border-bottom: 1px solid var(--line);
+				color: var(--text);
+				font-size: 14.5px;
+				font-family: var(--font-body);
+				padding: 8px 2px;
+				outline: none;
+				transition: border-color 0.15s ease;
+			}
+			.field select {
+				background: transparent;
+			}
+			.field select option {
+				background: var(--panel-2);
+				color: var(--text);
+			}
+			.field textarea {
+				resize: vertical;
+				min-height: 44px;
+			}
+			.field input:focus,
+			.field select:focus,
+			.field textarea:focus {
+				border-bottom: 1px solid var(--gold-soft);
+			}
+
+			.qual-row {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				margin-bottom: 8px;
+			}
+			.qual-row input {
+				flex: 1;
+			}
+			.qual-remove {
+				width: 26px;
+				height: 26px;
+				flex: 0 0 auto;
+				background: transparent;
+				border: 1px solid var(--line);
+				color: var(--muted-2);
+				cursor: pointer;
+				border-radius: 3px;
+				font-size: 15px;
+				line-height: 1;
+			}
+			.qual-remove:hover {
+				border-color: var(--rust);
+				color: var(--rust);
+			}
+			.qual-add {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				background: transparent;
+				border: 1px dashed var(--line);
+				color: var(--muted);
+				font-size: 12.5px;
+				padding: 7px 12px;
+				border-radius: 3px;
+				cursor: pointer;
+				margin-top: 2px;
+			}
+			.qual-add:hover {
+				border-color: var(--gold);
+				color: var(--gold-soft);
+			}
+			.qual-add .plus {
+				font-size: 14px;
+			}
+
+			.sheet-actions {
+				margin-top: 22px;
+				display: flex;
+				gap: 12px;
+				align-items: center;
+			}
+			.btn {
+				background: var(--gold);
+				color: #1a1305;
+				border: none;
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: 0.2px;
+				padding: 11px 22px;
+				cursor: pointer;
+				border-radius: 3px;
+				transition:
+					background 0.15s ease,
+					transform 0.1s ease;
+			}
+			.btn:hover {
+				background: var(--gold-soft);
+			}
+			.btn:active {
+				transform: scale(0.98);
+			}
+			.btn.ghost {
+				background: transparent;
+				border: 1px solid var(--line);
+				color: var(--muted);
+			}
+			.btn.ghost:hover {
+				border-color: var(--muted);
+				color: var(--text);
+			}
+			.form-msg {
+				font-size: 12.5px;
+				color: var(--rust);
+				min-height: 14px;
+			}
 		</style>
 	</head>
 	<body></body>
