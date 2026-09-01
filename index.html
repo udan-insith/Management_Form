@@ -1489,7 +1489,151 @@
 						});
 					});
 				}
-			});
+
+				/* ---------------- Institute payments ---------------- */
+				document.getElementById("expDate").value = todayStr();
+
+				document
+					.getElementById("saveExpenseBtn")
+					.addEventListener("click", () => {
+						const category = document.getElementById("expCategory").value;
+						const date = document.getElementById("expDate").value;
+						const amount = parseFloat(
+							document.getElementById("expAmount").value,
+						);
+						const desc = document.getElementById("expDesc").value.trim();
+						const msg = document.getElementById("expMsg");
+						if (!date || !amount || amount <= 0) {
+							msg.textContent = "Enter a date and an amount greater than zero.";
+							return;
+						}
+						msg.textContent = "";
+						state.institutePayments.push({
+							id: uid(),
+							category,
+							date,
+							amount,
+							desc,
+						});
+						document.getElementById("expAmount").value = "";
+						document.getElementById("expDesc").value = "";
+						renderInstitutePayTable();
+						renderDashboard();
+					});
+
+				function renderInstitutePayTable() {
+					const tbody = document.querySelector("#institutePayTable tbody");
+					if (!state.institutePayments.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="5">No expenses logged yet — the first line of this book is waiting to be written.</td></tr>';
+						document.getElementById("institutePayTotal").textContent = money(0);
+						return;
+					}
+					tbody.innerHTML = state.institutePayments
+						.map(
+							(p) =>
+								"<tr>" +
+								"<td>" +
+								fmtDate(p.date) +
+								"</td>" +
+								'<td class="name-col">' +
+								esc(p.category) +
+								"</td>" +
+								"<td>" +
+								esc(p.desc || "—") +
+								"</td>" +
+								'<td class="num">' +
+								money(p.amount) +
+								"</td>" +
+								'<td><button class="row-del" data-id="' +
+								p.id +
+								'" aria-label="Remove expense">🗑</button></td>' +
+								"</tr>",
+						)
+						.join("");
+					const total = state.institutePayments.reduce(
+						(s, p) => s + Number(p.amount || 0),
+						0,
+					);
+					document.getElementById("institutePayTotal").textContent =
+						money(total);
+					tbody.querySelectorAll(".row-del").forEach((b) => {
+						b.addEventListener("click", () => {
+							state.institutePayments = state.institutePayments.filter(
+								(p) => p.id !== b.dataset.id,
+							);
+							renderInstitutePayTable();
+							renderDashboard();
+						});
+					});
+				}
+
+				/* ---------------- Backup / restore ---------------- */
+				document.getElementById("exportBtn").addEventListener("click", () => {
+					const blob = new Blob([JSON.stringify(state, null, 2)], {
+						type: "application/json",
+					});
+					const url = URL.createObjectURL(blob);
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = "ironledger-backup-" + todayStr() + ".json";
+					document.body.appendChild(a);
+					a.click();
+					a.remove();
+					URL.revokeObjectURL(url);
+				});
+
+				const importFile = document.getElementById("importFile");
+				document
+					.getElementById("importBtn")
+					.addEventListener("click", () => importFile.click());
+				importFile.addEventListener("change", () => {
+					const file = importFile.files[0];
+					if (!file) return;
+					const reader = new FileReader();
+					reader.onload = () => {
+						try {
+							const data = JSON.parse(reader.result);
+							if (!data || typeof data !== "object")
+								throw new Error("bad file");
+							state.students = Array.isArray(data.students)
+								? data.students
+								: [];
+							state.attendance =
+								data.attendance && typeof data.attendance === "object"
+									? data.attendance
+									: {};
+							state.studentPayments = Array.isArray(data.studentPayments)
+								? data.studentPayments
+								: [];
+							state.institutePayments = Array.isArray(data.institutePayments)
+								? data.institutePayments
+								: [];
+							renderRegistrationTable();
+							renderAttendanceMarkList();
+							renderAttendanceLedger();
+							refreshStudentDropdown();
+							renderStudentPayTable();
+							renderInstitutePayTable();
+							renderDashboard();
+							alert("Records restored from backup.");
+						} catch (e) {
+							alert("That file could not be read as an IRONLEDGER backup.");
+						}
+						importFile.value = "";
+					};
+					reader.readAsText(file);
+				});
+
+				/* ---------------- Init ---------------- */
+				refreshStudentDropdown();
+				renderDashboard();
+				renderRegistrationTable();
+				renderAttendanceMarkList();
+				renderAttendanceLedger();
+				renderStudentPayTable();
+				renderInstitutePayTable();
+			})();
 		</script>
 	</body>
 </html>
