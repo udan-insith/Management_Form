@@ -632,5 +632,31 @@
 			}
 		</style>
 	</head>
-	<body></body>
+	<body>
+		<nav class="topbar">
+			<div class="brand">
+				<span class="mark">IRONLEDGER</span>
+				<span class="sub">Member &amp; institute records</span>
+			</div>
+			<div class="navlinks" id="navlinks">
+				<button data-tab="dashboard" class="active">Dashboard</button>
+				<button data-tab="attendance">Attendance</button>
+				<button data-tab="registration">Registration</button>
+				<button data-tab="studentpay">Student payments</button>
+				<button data-tab="institutepay">Institute payments</button>
+			</div>
+			<div class="iobtns">
+				<button class="iobtn" id="exportBtn" title="Save all records to a file">
+					⭳ Backup
+				</button>
+				<button
+					class="iobtn"
+					id="importBtn"
+					title="Load records from a backup file"
+				>
+					⭱ Restore
+				</button>
+			</div>
+		</nav>
+	</body>
 </html>
