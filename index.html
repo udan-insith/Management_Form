@@ -864,6 +864,88 @@
 					</table>
 				</div>
 			</section>
+
+			<!-- STUDENT PAYMENT -->
+			<section class="page" id="page-studentpay">
+				<div class="tab-flag">
+					<i style="background: var(--gold)"></i><span>Book 03</span>
+				</div>
+				<h1 class="page-title">Student payments</h1>
+				<p class="page-lede">
+					Log every fee as it comes in. Each entry writes a new line into the
+					payment book below.
+				</p>
+
+				<div class="sheet">
+					<h2>New payment</h2>
+					<div class="field-grid">
+						<div class="field">
+							<label for="paymentStudent">Student</label>
+							<select id="paymentStudent"></select>
+						</div>
+						<div class="field">
+							<label for="paymentDate">Date</label>
+							<input type="date" id="paymentDate" />
+						</div>
+						<div class="field">
+							<label for="paymentAmount">Amount (Rs.)</label>
+							<input
+								type="number"
+								id="paymentAmount"
+								min="0"
+								step="0.01"
+								placeholder="0.00"
+							/>
+						</div>
+						<div class="field">
+							<label for="paymentMethod">Method</label>
+							<select id="paymentMethod">
+								<option>Cash</option>
+								<option>Card</option>
+								<option>Bank transfer</option>
+								<option>Other</option>
+							</select>
+						</div>
+						<div class="field full">
+							<label for="paymentDesc">Description</label>
+							<input
+								type="text"
+								id="paymentDesc"
+								placeholder="e.g. Monthly fee — September"
+							/>
+						</div>
+					</div>
+					<div class="sheet-actions">
+						<button class="btn" id="savePaymentBtn">Add payment</button>
+						<span class="form-msg" id="paymentMsg"></span>
+					</div>
+				</div>
+
+				<p class="section-title">Payment book</p>
+				<div class="ledger-wrap">
+					<table class="ledger" id="studentPayTable">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Student</th>
+								<th>NIC no.</th>
+								<th>Description</th>
+								<th>Method</th>
+								<th class="num">Amount</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot>
+							<tr>
+								<td colspan="5">Total collected</td>
+								<td class="num" id="studentPayTotal">Rs. 0.00</td>
+								<td></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</section>
 		</main>
 	</body>
 </html>
