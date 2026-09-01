@@ -1073,6 +1073,61 @@
 						year: "2-digit",
 					});
 				};
+
+				/* ---------------- Navigation ---------------- */
+				const pages = [
+					"dashboard",
+					"attendance",
+					"registration",
+					"studentpay",
+					"institutepay",
+				];
+				function showPage(tab) {
+					pages.forEach((p) => {
+						document
+							.getElementById("page-" + p)
+							.classList.toggle("active", p === tab);
+					});
+					document.querySelectorAll(".navlinks button").forEach((b) => {
+						b.classList.toggle("active", b.dataset.tab === tab);
+					});
+					if (tab === "dashboard") renderDashboard();
+					if (tab === "attendance") {
+						renderAttendanceMarkList();
+						renderAttendanceLedger();
+					}
+					if (tab === "registration") renderRegistrationTable();
+					if (tab === "studentpay") {
+						refreshStudentDropdown();
+						renderStudentPayTable();
+					}
+					if (tab === "institutepay") renderInstitutePayTable();
+					window.scrollTo({ top: 0, behavior: "smooth" });
+				}
+				document.querySelectorAll("[data-tab]").forEach((el) => {
+					el.addEventListener("click", () => showPage(el.dataset.tab));
+				});
+
+				/* ---------------- Dashboard ---------------- */
+				function renderDashboard() {
+					document.getElementById("statStudents").textContent =
+						state.students.length;
+					const todays = state.attendance[todayStr()] || {};
+					const present = Object.values(todays).filter((v) => v === "P").length;
+					document.getElementById("statPresent").textContent = present;
+					const collected = state.studentPayments.reduce(
+						(s, p) => s + Number(p.amount || 0),
+						0,
+					);
+					const spent = state.institutePayments.reduce(
+						(s, p) => s + Number(p.amount || 0),
+						0,
+					);
+					document.getElementById("statCollected").textContent =
+						collected.toLocaleString("en-LK", { maximumFractionDigits: 0 });
+					document.getElementById("statSpent").textContent =
+						spent.toLocaleString("en-LK", { maximumFractionDigits: 0 });
+				}
 			});
 		</script>
 	</body>
