@@ -727,6 +727,49 @@
 					</button>
 				</div>
 			</section>
+
+			<!-- ATTENDANCE -->
+			<section class="page" id="page-attendance">
+				<div class="tab-flag">
+					<i style="background: var(--teal)"></i><span>Book 01</span>
+				</div>
+				<h1 class="page-title">Attendance register</h1>
+				<p class="page-lede">
+					Pick a date, tick who's in, save the day. Every date you save becomes
+					a new column in the register below — just like marking a physical
+					attendance book.
+				</p>
+
+				<div class="sheet">
+					<h2>Mark attendance</h2>
+					<div class="att-controls">
+						<div class="field">
+							<label for="attDate">Date</label>
+							<input type="date" id="attDate" />
+						</div>
+					</div>
+					<p class="section-title" id="attListTitle">Students</p>
+					<div class="att-list" id="attList"></div>
+					<div class="sheet-actions">
+						<button class="btn" id="saveAttendanceBtn">
+							Save attendance for this date
+						</button>
+						<span class="form-msg" id="attMsg"></span>
+					</div>
+				</div>
+
+				<p class="section-title">Register — one column per day</p>
+				<div class="ledger-wrap">
+					<table class="ledger" id="attendanceTable">
+						<thead>
+							<tr>
+								<th>Student</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</section>
 		</main>
 	</body>
 </html>
