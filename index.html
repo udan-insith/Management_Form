@@ -1128,6 +1128,143 @@
 					document.getElementById("statSpent").textContent =
 						spent.toLocaleString("en-LK", { maximumFractionDigits: 0 });
 				}
+
+				/* ---------------- Registration ---------------- */
+				function addQualRow(containerId, placeholder, value) {
+					const container = document.getElementById(containerId);
+					const row = document.createElement("div");
+					row.className = "qual-row";
+					row.innerHTML =
+						'<input type="text" placeholder="' +
+						esc(placeholder) +
+						'" value="' +
+						esc(value || "") +
+						'">' +
+						'<button type="button" class="qual-remove" aria-label="Remove qualification">×</button>';
+					row.querySelector(".qual-remove").addEventListener("click", () => {
+						if (container.children.length > 1) row.remove();
+						else row.querySelector("input").value = "";
+					});
+					container.appendChild(row);
+				}
+				document.querySelectorAll(".qual-add").forEach((btn) => {
+					btn.addEventListener("click", () =>
+						addQualRow(btn.dataset.target, btn.dataset.placeholder),
+					);
+				});
+				function resetQualList(containerId, placeholder) {
+					const container = document.getElementById(containerId);
+					container.innerHTML = "";
+					addQualRow(containerId, placeholder);
+				}
+				function collectQuals(containerId) {
+					return Array.from(
+						document.getElementById(containerId).querySelectorAll("input"),
+					)
+						.map((i) => i.value.trim())
+						.filter(Boolean);
+				}
+				resetQualList("eduQualList", "e.g. BSc in Sports Science");
+				resetQualList("otherQualList", "e.g. First Aid Certified");
+
+				document
+					.getElementById("saveStudentBtn")
+					.addEventListener("click", () => {
+						const name = document.getElementById("regName").value.trim();
+						const nic = document.getElementById("regNic").value.trim();
+						const address = document.getElementById("regAddress").value.trim();
+						const email = document.getElementById("regEmail").value.trim();
+						const msg = document.getElementById("regMsg");
+						if (!name || !nic) {
+							msg.textContent = "Name and NIC no. are required.";
+							return;
+						}
+						msg.textContent = "";
+						state.students.push({
+							id: uid(),
+							name,
+							nic,
+							address,
+							email,
+							edu: collectQuals("eduQualList"),
+							other: collectQuals("otherQualList"),
+						});
+						document.getElementById("regName").value = "";
+						document.getElementById("regNic").value = "";
+						document.getElementById("regAddress").value = "";
+						document.getElementById("regEmail").value = "";
+						resetQualList("eduQualList", "e.g. BSc in Sports Science");
+						resetQualList("otherQualList", "e.g. First Aid Certified");
+						renderRegistrationTable();
+					});
+
+				function qualTags(list) {
+					if (!list || !list.length)
+						return '<span style="color:var(--muted-2)">—</span>';
+					return list
+						.map((q) => '<span class="qual-tag">' + esc(q) + "</span>")
+						.join("");
+				}
+
+				function renderRegistrationTable() {
+					const tbody = document.querySelector("#registrationTable tbody");
+					if (!state.students.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="7">No students registered yet — the first line of this book is waiting to be written.</td></tr>';
+						return;
+					}
+					tbody.innerHTML = state.students
+						.map(
+							(s) =>
+								"<tr>" +
+								'<td class="name-col">' +
+								esc(s.name) +
+								"</td>" +
+								"<td>" +
+								esc(s.nic) +
+								"</td>" +
+								"<td>" +
+								esc(s.address) +
+								"</td>" +
+								"<td>" +
+								esc(s.email) +
+								"</td>" +
+								"<td>" +
+								qualTags(s.edu) +
+								"</td>" +
+								"<td>" +
+								qualTags(s.other) +
+								"</td>" +
+								'<td><button class="row-del" data-id="' +
+								s.id +
+								'" aria-label="Remove student">🗑</button></td>' +
+								"</tr>",
+						)
+						.join("");
+					tbody.querySelectorAll(".row-del").forEach((b) => {
+						b.addEventListener("click", () => {
+							if (
+								!confirm(
+									"Remove this student and their records from attendance and payments?",
+								)
+							)
+								return;
+							const id = b.dataset.id;
+							state.students = state.students.filter((s) => s.id !== id);
+							Object.values(state.attendance).forEach((rec) => {
+								delete rec[id];
+							});
+							state.studentPayments = state.studentPayments.filter(
+								(p) => p.studentId !== id,
+							);
+							renderRegistrationTable();
+							renderAttendanceMarkList();
+							renderAttendanceLedger();
+							refreshStudentDropdown();
+							renderStudentPayTable();
+						});
+					});
+				}
 			});
 		</script>
 	</body>
