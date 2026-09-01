@@ -1,34 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRONLEDGER — Member &amp; Institute Records</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-    <style>
-        :root{
-        --ink:#0a0e12;
-        --panel:#10161c;
-        --panel-2:#171f27;
-        --line:#232c36;
-        --line-soft:#1b232c;
-        --gold:#c9a24b;
-        --gold-soft:#e4c97a;
-        --teal:#3fa796;
-        --azure:#5b8dbe;
-        --rust:#d9634a;
-        --text:#edeff2;
-        --muted:#8b96a5;
-        --muted-2:#5f6b7a;
-        --font-display:'Bebas Neue', sans-serif;
-        --font-body:'IBM Plex Sans', -apple-system, sans-serif;
-        --font-mono:'IBM Plex Mono', monospace;
-    }
-    </style>
-</head>
-<body>
-    
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>IRONLEDGER — Member &amp; Institute Records</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--ink: #0a0e12;
+				--panel: #10161c;
+				--panel-2: #171f27;
+				--line: #232c36;
+				--line-soft: #1b232c;
+				--gold: #c9a24b;
+				--gold-soft: #e4c97a;
+				--teal: #3fa796;
+				--azure: #5b8dbe;
+				--rust: #d9634a;
+				--text: #edeff2;
+				--muted: #8b96a5;
+				--muted-2: #5f6b7a;
+				--font-display: "Bebas Neue", sans-serif;
+				--font-body: "IBM Plex Sans", -apple-system, sans-serif;
+				--font-mono: "IBM Plex Mono", monospace;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				margin: 0;
+				background:
+					radial-gradient(
+						1200px 500px at 15% -10%,
+						rgba(201, 162, 75, 0.07),
+						transparent 60%
+					),
+					var(--ink);
+				color: var(--text);
+				font-family: var(--font-body);
+				line-height: 1.5;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			a {
+				color: inherit;
+			}
+			button {
+				font-family: inherit;
+			}
+
+			::selection {
+				background: rgba(201, 162, 75, 0.35);
+			}
+
+			:focus-visible {
+				outline: 2px solid var(--gold-soft);
+				outline-offset: 2px;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* {
+					animation-duration: 0.01ms !important;
+					transition-duration: 0.01ms !important;
+				}
+			}
+			/* TOP BAR */
+			.topbar {
+				position: sticky;
+				top: 0;
+				z-index: 50;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 24px;
+				padding: 14px clamp(16px, 4vw, 40px);
+				background: rgba(10, 14, 18, 0.92);
+				backdrop-filter: blur(10px);
+				border-bottom: 1px solid var(--line);
+				background-image: repeating-linear-gradient(
+					to right,
+					var(--line-soft) 0 6px,
+					transparent 6px 14px
+				);
+				background-position: bottom;
+				background-size: 100% 1px;
+				background-repeat: repeat-x;
+			}
+			.brand {
+				display: flex;
+				align-items: baseline;
+				gap: 10px;
+				white-space: nowrap;
+			}
+			.brand .mark {
+				font-family: var(--font-display);
+				font-size: 26px;
+				letter-spacing: 1.5px;
+				color: var(--gold-soft);
+			}
+			.brand .sub {
+				font-size: 12px;
+				color: var(--muted-2);
+			}
+			.navlinks {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				flex-wrap: wrap;
+			}
+			.navlinks button {
+				background: transparent;
+				border: none;
+				cursor: pointer;
+				color: var(--muted);
+				font-size: 14px;
+				font-weight: 500;
+				padding: 10px 14px;
+				border-bottom: 2px solid transparent;
+				transition:
+					color 0.15s ease,
+					border-color 0.15s ease;
+			}
+			.navlinks button:hover {
+				color: var(--text);
+			}
+			.navlinks button.active {
+				color: var(--text);
+			}
+			.navlinks button[data-tab="dashboard"].active {
+				border-color: var(--gold-soft);
+			}
+			.navlinks button[data-tab="attendance"].active {
+				border-color: var(--teal);
+			}
+			.navlinks button[data-tab="registration"].active {
+				border-color: var(--azure);
+			}
+			.navlinks button[data-tab="studentpay"].active {
+				border-color: var(--gold-soft);
+			}
+			.navlinks button[data-tab="institutepay"].active {
+				border-color: var(--rust);
+			}
+
+			.iobtns {
+				display: flex;
+				gap: 8px;
+			}
+			.iobtn {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				background: var(--panel-2);
+				border: 1px solid var(--line);
+				color: var(--muted);
+				font-size: 12.5px;
+				padding: 8px 12px;
+				border-radius: 3px;
+				cursor: pointer;
+				transition:
+					border-color 0.15s ease,
+					color 0.15s ease;
+			}
+			.iobtn:hover {
+				border-color: var(--gold);
+				color: var(--text);
+			}
+		</style>
+	</head>
+	<body></body>
 </html>
