@@ -658,5 +658,75 @@
 				</button>
 			</div>
 		</nav>
+
+		<main>
+			<!-- DASHBOARD -->
+			<section class="page active" id="page-dashboard">
+				<h1 class="page-title">Today's ledger</h1>
+				<p class="page-lede">
+					A running record of who's training, who's registered, and what's moved
+					through the books.
+				</p>
+
+				<div class="stat-row">
+					<div class="stat">
+						<span class="num" id="statStudents">0</span
+						><span class="lbl">Registered students</span>
+					</div>
+					<div class="stat">
+						<span class="num" id="statPresent">0</span
+						><span class="lbl">Present today</span>
+					</div>
+					<div class="stat">
+						<span class="num" id="statCollected">0</span
+						><span class="lbl">Collected from students</span>
+					</div>
+					<div class="stat">
+						<span class="num" id="statSpent">0</span
+						><span class="lbl">Institute expenses</span>
+					</div>
+				</div>
+
+				<p class="section-title">Go to a book</p>
+				<div class="nav-grid">
+					<button
+						class="nav-card"
+						style="--card-accent: var(--teal)"
+						data-tab="attendance"
+					>
+						<span class="go">→</span>
+						<h3>Attendance</h3>
+						<p>Mark who trained today and see the full register.</p>
+					</button>
+					<button
+						class="nav-card"
+						style="--card-accent: var(--azure)"
+						data-tab="registration"
+					>
+						<span class="go">→</span>
+						<h3>Registration</h3>
+						<p>Enrol a new student and keep their details on file.</p>
+					</button>
+					<button
+						class="nav-card"
+						style="--card-accent: var(--gold)"
+						data-tab="studentpay"
+					>
+						<span class="go">→</span>
+						<h3>Student payments</h3>
+						<p>Log fees, dues and payments as they're collected.</p>
+					</button>
+					<button
+						class="nav-card"
+						style="--card-accent: var(--rust)"
+						data-tab="institutepay"
+					>
+						<span class="go">→</span>
+						<h3>Institute payments</h3>
+						<p>Track lecturers, electricity, water, rent and other spend.</p>
+					</button>
+				</div>
+			</section>
+		</main>
 	</body>
 </html>
