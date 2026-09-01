@@ -946,6 +946,83 @@
 					</table>
 				</div>
 			</section>
+
+			<!-- INSTITUTE PAYMENT -->
+			<section class="page" id="page-institutepay">
+				<div class="tab-flag">
+					<i style="background: var(--rust)"></i><span>Book 04</span>
+				</div>
+				<h1 class="page-title">Institute payments</h1>
+				<p class="page-lede">
+					Track what goes out — lecturers, electricity, water, rent and anything
+					else.
+				</p>
+
+				<div class="sheet">
+					<h2>New expense</h2>
+					<div class="field-grid">
+						<div class="field">
+							<label for="expCategory">Category</label>
+							<select id="expCategory">
+								<option>Lecturers</option>
+								<option>Electricity</option>
+								<option>Water</option>
+								<option>Rent</option>
+								<option>Other</option>
+							</select>
+						</div>
+						<div class="field">
+							<label for="expDate">Date</label>
+							<input type="date" id="expDate" />
+						</div>
+						<div class="field">
+							<label for="expAmount">Amount (Rs.)</label>
+							<input
+								type="number"
+								id="expAmount"
+								min="0"
+								step="0.01"
+								placeholder="0.00"
+							/>
+						</div>
+						<div class="field">
+							<label for="expDesc">Description</label>
+							<input
+								type="text"
+								id="expDesc"
+								placeholder="e.g. August electricity bill"
+							/>
+						</div>
+					</div>
+					<div class="sheet-actions">
+						<button class="btn" id="saveExpenseBtn">Add expense</button>
+						<span class="form-msg" id="expMsg"></span>
+					</div>
+				</div>
+
+				<p class="section-title">Expense book</p>
+				<div class="ledger-wrap">
+					<table class="ledger" id="institutePayTable">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Category</th>
+								<th>Description</th>
+								<th class="num">Amount</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot>
+							<tr>
+								<td colspan="3">Total expenses</td>
+								<td class="num" id="institutePayTotal">Rs. 0.00</td>
+								<td></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</section>
 		</main>
 	</body>
 </html>
