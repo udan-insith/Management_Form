@@ -770,6 +770,100 @@
 					</table>
 				</div>
 			</section>
+
+			<!-- REGISTRATION -->
+			<section class="page" id="page-registration">
+				<div class="tab-flag">
+					<i style="background: var(--azure)"></i><span>Book 02</span>
+				</div>
+				<h1 class="page-title">Student registration</h1>
+				<p class="page-lede">
+					Enrol a new student. Once saved, they'll appear automatically in the
+					attendance register and the payment book.
+				</p>
+
+				<div class="sheet">
+					<h2>New student</h2>
+					<div class="field-grid">
+						<div class="field">
+							<label for="regName">Student name</label>
+							<input
+								type="text"
+								id="regName"
+								placeholder="e.g. Nadeesha Perera"
+							/>
+						</div>
+						<div class="field">
+							<label for="regNic">NIC no.</label>
+							<input type="text" id="regNic" placeholder="e.g. 200145601234" />
+						</div>
+						<div class="field full">
+							<label for="regAddress">Address</label>
+							<textarea
+								id="regAddress"
+								placeholder="e.g. 24 Lake Road, Maharagama"
+							></textarea>
+						</div>
+						<div class="field">
+							<label for="regEmail">E-mail</label>
+							<input
+								type="email"
+								id="regEmail"
+								placeholder="e.g. name@email.com"
+							/>
+						</div>
+						<div></div>
+
+						<div class="field full">
+							<label>Education qualification</label>
+							<div id="eduQualList"></div>
+							<button
+								type="button"
+								class="qual-add"
+								data-target="eduQualList"
+								data-placeholder="e.g. BSc in Sports Science"
+							>
+								<span class="plus">+</span> Add another qualification
+							</button>
+						</div>
+
+						<div class="field full">
+							<label>Other qualification</label>
+							<div id="otherQualList"></div>
+							<button
+								type="button"
+								class="qual-add"
+								data-target="otherQualList"
+								data-placeholder="e.g. First Aid Certified"
+							>
+								<span class="plus">+</span> Add another qualification
+							</button>
+						</div>
+					</div>
+					<div class="sheet-actions">
+						<button class="btn" id="saveStudentBtn">Register student</button>
+						<span class="form-msg" id="regMsg"></span>
+					</div>
+				</div>
+
+				<p class="section-title">All registered students</p>
+				<div class="ledger-wrap">
+					<table class="ledger" id="registrationTable">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>NIC no.</th>
+								<th>Address</th>
+								<th>E-mail</th>
+								<th>Education qualification</th>
+								<th>Other qualification</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</section>
 		</main>
 	</body>
 </html>
