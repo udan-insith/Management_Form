@@ -1032,6 +1032,48 @@
 
 		<input type="file" id="importFile" accept="application/json" hidden />
 
-		<script></script>
+		<script>
+			(function () {
+				"use strict";
+
+				/* ---------------- State ---------------- */
+				const state = {
+					students: [], // {id, name, nic, address, email, edu:[], other:[]}
+					attendance: {}, // { 'YYYY-MM-DD': { studentId: 'P' | 'A' } }
+					studentPayments: [], // {id, studentId, date, amount, desc, method}
+					institutePayments: [], // {id, category, date, amount, desc}
+				};
+				let seq = 1;
+				const uid = () => "id" + seq++ + "-" + Date.now().toString(36);
+				const todayStr = () => new Date().toISOString().slice(0, 10);
+				const money = (n) =>
+					"Rs. " +
+					(Number(n) || 0).toLocaleString("en-LK", {
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2,
+					});
+				const esc = (s) =>
+					String(s == null ? "" : s).replace(
+						/[&<>"']/g,
+						(c) =>
+							({
+								"&": "&amp;",
+								"<": "&lt;",
+								">": "&gt;",
+								'"': "&quot;",
+								"'": "&#39;",
+							})[c],
+					);
+				const fmtDate = (d) => {
+					const dt = new Date(d + "T00:00:00");
+					if (isNaN(dt)) return d;
+					return dt.toLocaleDateString("en-GB", {
+						day: "2-digit",
+						month: "short",
+						year: "2-digit",
+					});
+				};
+			});
+		</script>
 	</body>
 </html>
