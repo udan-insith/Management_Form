@@ -448,6 +448,113 @@
 				color: var(--rust);
 				min-height: 14px;
 			}
+			/* LEDGER TABLES STYLES */
+			.ledger-wrap {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				overflow-x: auto;
+			}
+			table.ledger {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 13.5px;
+				min-width: 560px;
+			}
+			table.ledger thead th {
+				text-align: left;
+				font-weight: 600;
+				font-size: 12px;
+				color: var(--muted);
+				padding: 14px 16px;
+				border-bottom: 2px solid var(--line);
+				white-space: nowrap;
+				position: sticky;
+				top: 0;
+				background: var(--panel);
+			}
+			table.ledger tbody td {
+				padding: 12px 16px;
+				border-bottom: 1px solid var(--line-soft);
+				color: var(--text);
+				vertical-align: top;
+			}
+			table.ledger tbody tr:nth-child(odd) {
+				background: rgba(201, 162, 75, 0.02);
+			}
+			table.ledger tbody tr:hover {
+				background: rgba(201, 162, 75, 0.05);
+			}
+			table.ledger td.num,
+			table.ledger th.num {
+				font-family: var(--font-mono);
+				text-align: right;
+				white-space: nowrap;
+			}
+			table.ledger td.name-col {
+				position: sticky;
+				left: 0;
+				background: var(--panel);
+				font-weight: 600;
+			}
+			table.ledger tbody tr:nth-child(odd) td.name-col {
+				background: #12181e;
+			}
+			table.ledger tfoot td {
+				padding: 14px 16px;
+				border-top: 2px solid var(--line);
+				font-weight: 600;
+				font-family: var(--font-mono);
+			}
+			.qual-tag {
+				display: inline-block;
+				font-size: 11.5px;
+				color: var(--muted);
+				background: var(--panel-2);
+				border: 1px solid var(--line);
+				padding: 2px 7px;
+				border-radius: 2px;
+				margin: 2px 4px 2px 0;
+			}
+			.row-del {
+				background: transparent;
+				border: none;
+				color: var(--muted-2);
+				cursor: pointer;
+				font-size: 15px;
+				padding: 2px 6px;
+			}
+			.row-del:hover {
+				color: var(--rust);
+			}
+			.mark {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 24px;
+				height: 24px;
+				border-radius: 3px;
+				font-size: 11px;
+				font-weight: 700;
+				font-family: var(--font-mono);
+			}
+			.mark.present {
+				background: rgba(63, 167, 150, 0.16);
+				color: var(--teal);
+			}
+			.mark.absent {
+				background: rgba(217, 99, 74, 0.14);
+				color: var(--rust);
+			}
+			.mark.none {
+				color: var(--muted-2);
+			}
+
+			.empty-row {
+				text-align: center;
+				color: var(--muted-2);
+				font-style: italic;
+				padding: 34px 16px !important;
+			}
 		</style>
 	</head>
 	<body></body>
