@@ -1265,6 +1265,116 @@
 						});
 					});
 				}
+
+				/* ---------------- Attendance ---------------- */
+				const attDateInput = document.getElementById("attDate");
+				attDateInput.value = todayStr();
+				attDateInput.addEventListener("change", renderAttendanceMarkList);
+
+				function renderAttendanceMarkList() {
+					const list = document.getElementById("attList");
+					const date = attDateInput.value || todayStr();
+					document.getElementById("attListTitle").textContent =
+						"Students — " + fmtDate(date);
+					if (!state.students.length) {
+						list.innerHTML =
+							'<p style="color:var(--muted-2); font-size:13px;">No students registered yet. Add one on the Registration page first.</p>';
+						return;
+					}
+					const existing = state.attendance[date] || null;
+					list.innerHTML = state.students
+						.map((s) => {
+							const checked = existing ? existing[s.id] === "P" : true;
+							return (
+								'<label class="att-item">' +
+								'<input type="checkbox" data-id="' +
+								s.id +
+								'" ' +
+								(checked ? "checked" : "") +
+								">" +
+								'<span class="who">' +
+								esc(s.name) +
+								"<small>" +
+								esc(s.nic) +
+								"</small></span>" +
+								"</label>"
+							);
+						})
+						.join("");
+				}
+
+				document
+					.getElementById("saveAttendanceBtn")
+					.addEventListener("click", () => {
+						const date = attDateInput.value;
+						const msg = document.getElementById("attMsg");
+						if (!date) {
+							msg.textContent = "Pick a date first.";
+							return;
+						}
+						if (!state.students.length) {
+							msg.textContent = "Register a student before taking attendance.";
+							return;
+						}
+						const record = {};
+						document
+							.querySelectorAll('#attList input[type="checkbox"]')
+							.forEach((cb) => {
+								record[cb.dataset.id] = cb.checked ? "P" : "A";
+							});
+						state.attendance[date] = record;
+						msg.textContent = "Saved attendance for " + fmtDate(date) + ".";
+						setTimeout(() => {
+							if (msg.textContent.startsWith("Saved")) msg.textContent = "";
+						}, 3000);
+						renderAttendanceLedger();
+						renderDashboard();
+					});
+
+				function renderAttendanceLedger() {
+					const table = document.getElementById("attendanceTable");
+					const thead = table.querySelector("thead tr");
+					const tbody = table.querySelector("tbody");
+					const dates = Object.keys(state.attendance).sort();
+
+					thead.innerHTML =
+						"<th>Student</th>" +
+						dates.map((d) => "<th>" + fmtDate(d) + "</th>").join("");
+
+					if (!state.students.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="' +
+							(dates.length + 1) +
+							'">No students registered yet.</td></tr>';
+						return;
+					}
+					if (!dates.length) {
+						tbody.innerHTML =
+							'<tr><td class="empty-row" colspan="1">No attendance marked yet — save a date above to open the register.</td></tr>';
+						return;
+					}
+					tbody.innerHTML = state.students
+						.map((s) => {
+							const cells = dates
+								.map((d) => {
+									const v = (state.attendance[d] || {})[s.id];
+									if (v === "P")
+										return '<td><span class="mark present">P</span></td>';
+									if (v === "A")
+										return '<td><span class="mark absent">A</span></td>';
+									return '<td><span class="mark none">—</span></td>';
+								})
+								.join("");
+							return (
+								'<tr><td class="name-col">' +
+								esc(s.name) +
+								"</td>" +
+								cells +
+								"</tr>"
+							);
+						})
+						.join("");
+				}
 			});
 		</script>
 	</body>
